@@ -18,7 +18,7 @@ import {
 
 import Image from "next/image";
 
-import HeroImage from "public/images/hero.jpg";
+import HeroImage from "../public/images/hero.jpg";
 import { IoMdCheckboxOutline } from "react-icons/io";
 
 export default function Hero() {
