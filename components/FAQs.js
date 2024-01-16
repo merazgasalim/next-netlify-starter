@@ -34,7 +34,7 @@ export default function FAQs() {
       <Text textAlign="center" >        
         you can use live chat or send us an email to contact@contact.com
       </Text>
-      <SimpleGrid columns={2} spacing={5} pt={5} >
+      <SimpleGrid columns={{base:1,md:2}} spacing={5} pt={5} >
         <Accordion>
           {FAQ.map((f, i) => (
             <AccordionItem key={i}>
@@ -52,7 +52,7 @@ export default function FAQs() {
         </Accordion>
         <Box>
           <Image
-            src="https://cdn.pixabay.com/photo/2012/11/07/07/35/earth-65050_1280.jpg"
+            src="/images/worldwide.jpg"
             alt="world_wide_service"
           />
         </Box>
