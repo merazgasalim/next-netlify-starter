@@ -8,12 +8,8 @@ import {
   List,
   ListIcon,
   ListItem,
-  SimpleGrid,
   Stack,
-  Text,
-  UnorderedList,
   useColorMode,
-  VStack,
 } from "@chakra-ui/react";
 
 import Image from "next/image";
@@ -31,6 +27,7 @@ export default function Hero() {
       pos="relative"
       maxH={"100vh"}
       overflow="hidden"
+      minH={{base:"50vh",md:"auto"}}
     >
       <Image src={HeroImage} alt="" priority={true} />
       <Box
@@ -42,7 +39,7 @@ export default function Hero() {
       ></Box>
       <Flex
         pos={"absolute"}
-        top={0}
+        top={{base:"66px",md:0}}
         left={0}
         w="100%"
         h={"100%"}
@@ -56,7 +53,6 @@ export default function Hero() {
             as={"h1"}
             color="orange.400"
             fontSize={{ base: "lg", md: "5xl" }}
-            
           >
             Get Your IPTV Subscription For Endless Entertainment
           </Heading>
@@ -64,9 +60,9 @@ export default function Hero() {
           <Stack
             direction={{ base: "column", md: "row" }}
             fontWeight={"bold"}
-            fontSize="xl"
+            fontSize={{ base: "md", md: "xl" }}
             as={List}
-            spacing={5}
+            spacing={{base:0,md:5}}
             align={"flex-start"}
           >
             <ListItem>
@@ -87,8 +83,8 @@ export default function Hero() {
             </ListItem>
           </Stack>
           <HStack pt={5} justify="center">
-            <Button colorScheme={"pink"}>Subscribe Now</Button>
-            <Button colorScheme={"pink"} variant="outline">
+            <Button colorScheme={"pink"} size={{base:"sm",md:"md"}} >Subscribe Now</Button>
+            <Button colorScheme={"pink"} variant="outline" size={{base:"sm",md:"md"}} >
               24 Hours Free Trial
             </Button>
           </HStack>
