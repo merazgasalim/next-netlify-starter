@@ -14,7 +14,7 @@ import {
 
 export default function FAQs() {
   return (
-    <Container as={"section"} maxW="6xl">
+    <Container as={"section"} maxW="6xl" id="contact" >
       <Heading as={"h2"} textAlign="center" mb={5}>
         We Cover Almost All Countries Around The World
       </Heading>

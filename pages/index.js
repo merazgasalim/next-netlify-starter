@@ -33,6 +33,11 @@ export default function Home() {
         <FAQs />
       </VStack>
       <Footer />
+      <style jsx global>{`
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
     </>
   );
 }

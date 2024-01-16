@@ -15,15 +15,16 @@ import {
   useColorModeValue,
   Stack,
 } from "@chakra-ui/react";
+import { Link } from '@chakra-ui/next-js'
 import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 
-const Links = ["Home", "Plans", "Contact"];
+const Links = [{name:"Home",url:"/"}, {name:"Plans",url:"/#plans"}, {name:"Contact",url:"#contact"}];
 
 const NavLink = (props) => {
   const { children } = props;
   return (
     <Box
-      as="a"
+      as={Link}
       px={2}
       py={1}
       rounded={"md"}
@@ -31,7 +32,7 @@ const NavLink = (props) => {
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
       }}
-      href={"#"}
+      href={props.url}
     >
       {children}
     </Box>
@@ -62,7 +63,7 @@ export default function Nav() {
           <Box>Logo</Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
-              <NavLink key={link}>{link}</NavLink>
+              <NavLink key={link} url={link.url} >{link.name}</NavLink>
             ))}
           </HStack>
         </HStack>
@@ -87,7 +88,7 @@ export default function Nav() {
               <Avatar
                 size={"sm"}
                 src={
-                  "https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9"
+                  "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?q=80&w=2080&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 }
               />
             </MenuButton>
@@ -105,7 +106,7 @@ export default function Nav() {
         <Box pb={4} display={{ md: "none" }}>
           <Stack as={"nav"} spacing={4}>
             {Links.map((link) => (
-              <NavLink key={link}>{link}</NavLink>
+              <NavLink key={link} url={link.url}>{link.name}</NavLink>
             ))}
           </Stack>
         </Box>

@@ -26,6 +26,7 @@ function PriceWrapper(props) {
       alignSelf={{ base: "center", lg: "flex-start" }}
       borderColor={useColorModeValue("gray.200", "gray.500")}
       borderRadius={"xl"}
+    
     >
       {children}
     </Box>
@@ -33,7 +34,7 @@ function PriceWrapper(props) {
 }
 export default function Plans() {
   return (
-    <Container as={"section"} maxW="full" textAlign={"center"}>
+    <Container as={"section"} maxW="full" textAlign={"center"}   id="plans">
       <Heading as={"h2"}  >Choose Your Perfect Plan</Heading>
 
       <Text>
