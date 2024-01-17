@@ -63,7 +63,7 @@ export default function Nav() {
           <Box>Logo</Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
-              <NavLink key={link} url={link.url} >{link.name}</NavLink>
+              <NavLink key={link.name} url={link.url} >{link.name}</NavLink>
             ))}
           </HStack>
         </HStack>
