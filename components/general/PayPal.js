@@ -7,6 +7,9 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
+  HStack,
+  Text,
+  Heading,
 } from "@chakra-ui/react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
@@ -23,10 +26,14 @@ export default function PayPal({ isOpen, onClose, plan }) {
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Cart</ModalHeader>
+        <ModalHeader>IP TV Subscription</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-        <PayPalButtons style={{ layout: "horizontal" }} />
+          <HStack justify={"space-between"} mb={5}>
+            <Text>{plan?.duration} </Text>
+            <Text>${plan?.price}</Text>
+          </HStack>
+          <PayPalButtons style={{ layout: "horizontal" }} />
         </ModalBody>
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={onClose}>
