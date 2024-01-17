@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import {
   Box,
   Container,
+  Image,
   SimpleGrid,
   Stack,
   Text,
@@ -68,6 +69,14 @@ export default function LargeWithLogoLeft() {
             <ListHeader>Cookie Policy</ListHeader>
           </Stack>
         </SimpleGrid>
+
+        <Image
+          src="https://www.paypalobjects.com/webstatic/mktg/logo/AM_mc_vs_dc_ae.jpg"
+          alt="PayPal Acceptance Mark"
+          maxW={300}
+          mx="auto"
+        />
+
         <Text fontSize={"sm"} textAlign="center">
           © {new Date().getFullYear()} Chakra Templates. All rights reserved
         </Text>

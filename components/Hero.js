@@ -27,7 +27,7 @@ export default function Hero() {
       pos="relative"
       maxH={"100vh"}
       overflow="hidden"
-      minH={{base:"50vh",md:"auto"}}
+      minH={{ base: "50vh", md: "auto" }}
     >
       <Image src={HeroImage} alt="" priority={true} />
       <Box
@@ -37,9 +37,18 @@ export default function Hero() {
         h="100%"
         bg="rgba(0,0,0,0.7)"
       ></Box>
+      <Box pos={"absolute"} bottom="0" right={0} w={{base:120,md:192}} >
+        <Image
+          src="https://www.paypalobjects.com/webstatic/mktg/logo/bdg_now_accepting_pp_2line_w.png"
+          border="0"
+          alt="Now accepting PayPal"
+          width={192}
+          height={55}
+        />
+      </Box>
       <Flex
         pos={"absolute"}
-        top={{base:"66px",md:0}}
+        top={{ base: "66px", md: 0 }}
         left={0}
         w="100%"
         h={"100%"}
@@ -62,7 +71,7 @@ export default function Hero() {
             fontWeight={"bold"}
             fontSize={{ base: "md", md: "xl" }}
             as={List}
-            spacing={{base:0,md:5}}
+            spacing={{ base: 0, md: 5 }}
             align={"flex-start"}
           >
             <ListItem>
@@ -83,8 +92,14 @@ export default function Hero() {
             </ListItem>
           </Stack>
           <HStack pt={5} justify="center">
-            <Button colorScheme={"pink"} size={{base:"sm",md:"md"}} >Subscribe Now</Button>
-            <Button colorScheme={"pink"} variant="outline" size={{base:"sm",md:"md"}} >
+            <Button colorScheme={"pink"} size={{ base: "sm", md: "md" }}>
+              Subscribe Now
+            </Button>
+            <Button
+              colorScheme={"pink"}
+              variant="outline"
+              size={{ base: "sm", md: "md" }}
+            >
               24 Hours Free Trial
             </Button>
           </HStack>
