@@ -14,7 +14,7 @@ import {
 
 export default function FAQs() {
   return (
-    <Container as={"section"} maxW="6xl" id="contact" >
+    <Container as={"section"} maxW="6xl" id="contact">
       <Heading as={"h2"} textAlign="center" mb={5}>
         We Cover Almost All Countries Around The World
       </Heading>
@@ -25,16 +25,7 @@ export default function FAQs() {
         countries around the world.
       </Text>
 
-      <Heading as={"h2"} textAlign="center" mb={5}>
-        Have Any Question?
-      </Heading>
-      <Text textAlign="center">
-        Our support team is available 24/7, Feel free to contact us
-      </Text>
-      <Text textAlign="center" >        
-        you can use live chat or send us an email to contact@contact.com
-      </Text>
-      <SimpleGrid columns={{base:1,md:2}} spacing={5} pt={5} >
+      <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5} pt={5}>
         <Accordion>
           {FAQ.map((f, i) => (
             <AccordionItem key={i}>
@@ -51,12 +42,19 @@ export default function FAQs() {
           ))}
         </Accordion>
         <Box>
-          <Image
-            src="/images/worldwide.jpg"
-            alt="world_wide_service"
-          />
+          <Image src="/images/worldwide.jpg" alt="world_wide_service" />
         </Box>
       </SimpleGrid>
+
+      <Heading as={"h2"} textAlign="center" mb={5} mt={5} >
+        Have Any Question?
+      </Heading>
+      <Text textAlign="center">
+        Our support team is available 24/7, Feel free to contact us
+      </Text>
+      <Text textAlign="center">
+        you can use live chat or send us an email to contact@contact.com
+      </Text>
     </Container>
   );
 }
