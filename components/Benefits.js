@@ -13,7 +13,7 @@ import {
 
 export default function Benefits() {
   return (
-    <Container as={"section"} maxW={"full"} py={12} px={0}>
+    <Container as={"section"} maxW={"full"}  px={0}>
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={0}>
         <Flex>
           <Image

@@ -11,6 +11,7 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import Link from "next/link";
 
 const Logo = (props) => {
   return (
@@ -57,16 +58,16 @@ export default function LargeWithLogoLeft() {
             </Box>
           </Stack>
           <Stack align={"flex-start"}>
-            <ListHeader>Privacy Policy</ListHeader>
+            <Link href={"/legal/privacy-policy"} >Privacy Policy</Link>
           </Stack>
           <Stack align={"flex-start"}>
-            <ListHeader>Refund Policy</ListHeader>
+            <Link href={"/legal/refund-policy"}>Refund Policy</Link>
           </Stack>
           <Stack align={"flex-start"}>
-            <ListHeader>Terms of service</ListHeader>
+            <Link href={"/legal/terms-of-service"}>Terms of service</Link>
           </Stack>
           <Stack align={"flex-start"}>
-            <ListHeader>Cookie Policy</ListHeader>
+            <Link href={"/legal/cookies-policy"}>Cookie Policy</Link>
           </Stack>
         </SimpleGrid>
 
@@ -78,7 +79,7 @@ export default function LargeWithLogoLeft() {
         />
 
         <Text fontSize={"sm"} textAlign="center">
-          © {new Date().getFullYear()} Chakra Templates. All rights reserved
+          © {new Date().getFullYear()} TV. All rights reserved
         </Text>
       </Container>
     </Box>

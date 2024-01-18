@@ -13,7 +13,7 @@ import {
 
 export default function Info() {
   return (
-    <Container as={"section"} maxW={"6xl"} py={12}>
+    <Container as={"section"} maxW={"6xl"} >
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
         <Stack spacing={4}>
           <Heading>More to Stream.</Heading>
@@ -38,7 +38,7 @@ export default function Info() {
             <Button colorScheme={"pink"}>Learn More</Button>
           </Stack>
         </Stack>
-        <Flex>
+        <Flex justify={"center"}  >
           <Image
             rounded={"md"}
             alt={"feature image"}

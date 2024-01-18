@@ -42,19 +42,17 @@ export default function Plans() {
     <Container as={"section"} maxW="full" textAlign={"center"} id="plans">
       <Heading as={"h2"}>Choose Your Perfect Plan</Heading>
 
-      <Text>
+      <Text color={"gray.500"} fontSize={"lg"} mb={2}>
         Enjoy unlimited access to the world of entertainment. Kick back with
         full seasons of exclusive Originals, the mega-hit movie library and
         more.
       </Text>
 
       <SimpleGrid
-        // direction={{ base: "column", md: "row" }}
         columns={{ base: 1, md: 2, lg: 4 }}
         textAlign="center"
         justify="center"
         spacing={{ base: 4, lg: 10 }}
-        py={10}
         w={"full"}
       >
         {Offers.map((plan, idx) => (

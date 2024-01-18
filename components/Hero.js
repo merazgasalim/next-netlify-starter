@@ -9,16 +9,13 @@ import {
   ListIcon,
   ListItem,
   Stack,
-  useColorMode,
+  Text,
 } from "@chakra-ui/react";
 
 import Image from "next/image";
-
-import HeroImage from "../public/images/hero.jpg";
 import { IoMdCheckboxOutline } from "react-icons/io";
 
 export default function Hero() {
-  const { colorMode, toggleColorMode } = useColorMode();
   return (
     <Container
       as={"header"}
@@ -27,9 +24,12 @@ export default function Hero() {
       pos="relative"
       maxH={"100vh"}
       overflow="hidden"
-      minH={{ base: "50vh", md: "auto" }}
+      minH={{ base: "65vh", md: "100vh" }}
+      bgImage="url(/images/hero.webp)"
+      bgRepeat={"no-repeat"}
+      bgPos="center"
+      bgSize="cover"
     >
-      <Image src={HeroImage} alt="" priority={true} />
       <Box
         pos={"absolute"}
         top="0"
@@ -37,7 +37,12 @@ export default function Hero() {
         h="100%"
         bg="rgba(0,0,0,0.7)"
       ></Box>
-      <Box pos={"absolute"} bottom="0" right={0} w={{base:120,md:192}} >
+      <Box
+        pos={"absolute"}
+        bottom={{ base: 0, md: 12, lg: 0 }}
+        right={0}
+        w={{ base: 120, md: 192 }}
+      >
         <Image
           src="https://www.paypalobjects.com/webstatic/mktg/logo/bdg_now_accepting_pp_2line_w.png"
           border="0"
@@ -48,7 +53,7 @@ export default function Hero() {
       </Box>
       <Flex
         pos={"absolute"}
-        top={{ base: "66px", md: 0 }}
+        top={0}
         left={0}
         w="100%"
         h={"100%"}
@@ -57,11 +62,12 @@ export default function Hero() {
         justify={"center"}
         textAlign="center"
       >
-        <Box pl={5}>
+        <Box>
           <Heading
             as={"h1"}
             color="orange.400"
-            fontSize={{ base: "lg", md: "5xl" }}
+            fontSize={{ base: "2xl", md: "5xl", lg: "6xl" }}
+            mb={5}
           >
             Get Your IPTV Subscription For Endless Entertainment
           </Heading>
@@ -71,23 +77,54 @@ export default function Hero() {
             fontWeight={"bold"}
             fontSize={{ base: "md", md: "xl" }}
             as={List}
-            spacing={{ base: 0, md: 5 }}
+            spacing={{ base: 0, md: 2 }}
             align={"flex-start"}
+            justify={{ base: "flex-start", md: "center" }}
+            alignItems={{ base: "flex-start", md: "center" }}
+            px={{ base: 5, md: 0 }}
+            textAlign="left"
           >
             <ListItem>
-              <ListIcon as={IoMdCheckboxOutline} />
+              <ListIcon
+                as={IoMdCheckboxOutline}
+                mr={0}
+                w={7}
+                h={7}
+                color="green.50"
+              />
               High Quality Video Streaming
             </ListItem>
             <ListItem>
-              <ListIcon as={IoMdCheckboxOutline} />
-              Thousands of HD UHD 4K Channels with EPG
+              <ListIcon
+                as={IoMdCheckboxOutline}
+                mr={0}
+                w={7}
+                h={7}
+                color="green.50"
+              />
+              Thousands of HD UHD 4K Channels{" "}
+              <Text as={"span"} display={{ base: "none", md: "inline" }}>
+                with EPG
+              </Text>
             </ListItem>
             <ListItem>
-              <ListIcon as={IoMdCheckboxOutline} />
+              <ListIcon
+                as={IoMdCheckboxOutline}
+                mr={0}
+                w={7}
+                h={7}
+                color="green.50"
+              />
               Thousands of HD UHD 4K VOD
             </ListItem>
             <ListItem>
-              <ListIcon as={IoMdCheckboxOutline} />
+              <ListIcon
+                as={IoMdCheckboxOutline}
+                mr={0}
+                w={7}
+                h={7}
+                color="green.50"
+              />
               24/7 Customer Support
             </ListItem>
           </Stack>

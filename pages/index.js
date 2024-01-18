@@ -22,12 +22,16 @@ export default function Home() {
       </Head>
       <Nav />
       <Hero />
-      <VStack as={"main"} pos={"relative"} top={-16} spacing={16}>
+      <VStack
+        as={"main"}
+        pos={"relative"}
+        top={{ base: -10, md: -12, lg: -14 }}
+        spacing={{ base: 8, md: 12, lg: 16 }}
+      >
         <Partners />
         <Info />
         <Benefits />
         <Plans />
-
         <Offers />
         <DeviceSupport />
         <FAQs />

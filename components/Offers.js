@@ -11,6 +11,7 @@ import {
   Icon,
   useColorModeValue,
   VStack,
+  Heading,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -68,30 +69,12 @@ export default function TargetAudience() {
       spacing={{ base: 0, md: 10 }}
       ref={ref}
       as={"section"}
-      py={{ base: 0, md: 12 }}
       maxW="6xl"
     >
       <Stack spacing={4}>
-        <Text
-          as={"h2"}
-          // textTransform={"uppercase"}
-          // color={"blue.400"}
-          //  fontWeight={500}
-          fontSize={{ base: "md", sm: "xl", md: "2xl" }}
-          //  bg={useColorModeValue("blue.50", "blue.900")}
-          // p={2}
-          alignSelf={"flex-start"}
-          //   rounded={"md"}
-        >
-          Subscribe To Our Service
-        </Text>
-        {/* <Heading as={"p"} fontSize={{ base: "lg", sm: "xl", lg: "2xl" }}>
-          {t("incolivers")
-        </Heading>*/}
-        <Text
-          color={useColorModeValue("gray.500", "gray.400")}
-          fontSize={{ base: "sm", sm: "md", md: "lg" }}
-        >
+        <Heading>Subscribe To Our Service</Heading>
+
+        <Text color={"gray.500"} fontSize={"lg"}>
           We are a premium IPTV subscription providers with many years of
           experience. Our IPTV service offers you the best image quality thanks
           to our powerful and stable servers without interference, which will
@@ -214,7 +197,6 @@ export default function TargetAudience() {
                 height={427}
               />
             </SwiperSlide>
-           
           </Swiper>
         </VStack>
       )}

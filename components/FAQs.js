@@ -18,7 +18,7 @@ export default function FAQs() {
       <Heading as={"h2"} textAlign="center" mb={5}>
         We Cover Almost All Countries Around The World
       </Heading>
-      <Text textAlign="center" mb={5}>
+      <Text textAlign="center" mb={5} color={"gray.500"} fontSize={"lg"}>
         We offer thousands of IPTV channels covering the Uk, USA, Canada,
         Portugal, Albania, Germany, Italy, France, Brasil, Romania, Greece,
         Spain, Ireland, Latino countries, Arabic countries and almost all
@@ -26,12 +26,15 @@ export default function FAQs() {
       </Text>
 
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5} pt={5}>
+        <Box display={{base:"block",md:"none"}} >
+          <Image src="/images/worldwide.jpg" alt="world_wide_service" />
+        </Box>
         <Accordion>
           {FAQ.map((f, i) => (
             <AccordionItem key={i}>
               <h2>
                 <AccordionButton>
-                  <Box as="span" flex="1" textAlign="left">
+                  <Box as="span" flex="1" textAlign="left" fontWeight={"bold"} >
                     {f.q}
                   </Box>
                   <AccordionIcon />
@@ -41,18 +44,18 @@ export default function FAQs() {
             </AccordionItem>
           ))}
         </Accordion>
-        <Box>
+        <Box display={{base:"none",md:"block"}} >
           <Image src="/images/worldwide.jpg" alt="world_wide_service" />
         </Box>
       </SimpleGrid>
 
-      <Heading as={"h2"} textAlign="center" mb={5} mt={5} >
+      <Heading as={"h2"} textAlign="center" mb={5} mt={5}>
         Have Any Question?
       </Heading>
-      <Text textAlign="center">
+      <Text textAlign="center" color={"gray.500"} fontSize={"lg"}>
         Our support team is available 24/7, Feel free to contact us
       </Text>
-      <Text textAlign="center">
+      <Text textAlign="center" color={"gray.500"} fontSize={"lg"}>
         you can use live chat or send us an email to contact@contact.com
       </Text>
     </Container>
