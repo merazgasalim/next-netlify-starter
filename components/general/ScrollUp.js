@@ -33,13 +33,12 @@ const ScrollUp = () => {
   return (
     <IconButton
       isRound
-      colorScheme="brand"
+      colorScheme="purple"
       aria-label="scroll to top"
       size="sm"
       icon={<IoIosArrowUp size={24} />}
       position="fixed"
-      right={locale === "ar" ? "auto" : isVisible ? 1 : -99999999999999}
-      left={locale === "ar" ? (isVisible ? 1 : -99999999999999) : "auto"}
+      left={isVisible ? 1 : -99999999999999}
       bottom={2}
       zIndex={2}
       onClick={() => window.scrollTo(0, 0)}
