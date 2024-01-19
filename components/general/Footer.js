@@ -79,7 +79,7 @@ export default function LargeWithLogoLeft() {
         />
 
         <Text fontSize={"sm"} textAlign="center">
-          © {new Date().getFullYear()} TV. All rights reserved
+          © {new Date().getFullYear()} {process.env.companyName}. All rights reserved
         </Text>
       </Container>
     </Box>

@@ -9,7 +9,7 @@ import {
   AccordionPanel,
   AccordionIcon,
   Box,
-  Image,
+  Image,Link
 } from "@chakra-ui/react";
 
 export default function FAQs() {
@@ -56,7 +56,9 @@ export default function FAQs() {
         Our support team is available 24/7, Feel free to contact us
       </Text>
       <Text textAlign="center" color={"gray.500"} fontSize={"lg"}>
-        you can use live chat or send us an email to contact@contact.com
+        you can use live chat or send us an email to  <Link href={`mailto:${process.env.supportMail}`} color="teal">
+          {process.env.supportMail}
+        </Link>
       </Text>
     </Container>
   );

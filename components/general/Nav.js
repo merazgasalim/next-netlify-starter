@@ -3,7 +3,6 @@ import {
   Flex,
   Avatar,
   HStack,
-  Text,
   IconButton,
   Button,
   Menu,
@@ -16,12 +15,12 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
-import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
 const Links = [
   { name: "Home", url: "/" },
   { name: "Plans", url: "/#plans" },
-  { name: "Contact", url: "#contact" },
+  { name: "Contact", url: "/#contact" },
 ];
 
 const NavLink = (props) => {
@@ -63,7 +62,12 @@ export default function Nav() {
           display={{ md: "none" }}
           onClick={isOpen ? onClose : onOpen}
         />
-        <HStack spacing={8} alignItems={"center"}  w={"full"} justify="space-around" >
+        <HStack
+          spacing={8}
+          alignItems={"center"}
+          w={"full"}
+          justify="space-around"
+        >
           <Box>Logo</Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
@@ -72,8 +76,7 @@ export default function Nav() {
               </NavLink>
             ))}
           </HStack>
-      
-      
+
           <Menu>
             <MenuButton
               as={Button}
@@ -96,7 +99,7 @@ export default function Nav() {
               <MenuItem>Link 3</MenuItem>
             </MenuList>
           </Menu>
-         </HStack>
+        </HStack>
       </Flex>
 
       {isOpen ? (
