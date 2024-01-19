@@ -14,9 +14,17 @@ const moduleExports = {
       process.env.NODE_ENV === "production"
         ? "AWiUfAW3bzZcZ_uxBMEo1mY11LpzY4dtsWjrrvWGxhxjGygA1lxaEJJi337t0NGNhjKm3BJE-Lbc0kKh"
         : "Adj14oLBZL0rUJ8-bRHvHWcvH2m1ZFrN0CiRqc2RLuWO5YGPxfBftbDeo-V6uabEgagNtlvTgo8dtkAh",
+    supportMail: "support@sample.com",
+    companyName: "Meraz",
   },
   images: {
-    domains: ["www.paypalobjects.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "www.paypalobjects.com",
+        pathname: "**",
+      },
+    ],
   },
 };
 

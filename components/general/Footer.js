@@ -61,7 +61,7 @@ export default function LargeWithLogoLeft() {
             <Link href={"/legal/privacy-policy"} >Privacy Policy</Link>
           </Stack>
           <Stack align={"flex-start"}>
-            <Link href={"/legal/refund-policy"}>Refund Policy</Link>
+            <Link href={"/legal/cancelation-policy"}>Cancelation Policy</Link>
           </Stack>
           <Stack align={"flex-start"}>
             <Link href={"/legal/terms-of-service"}>Terms of service</Link>

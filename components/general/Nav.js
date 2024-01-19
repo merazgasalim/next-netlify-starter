@@ -15,10 +15,14 @@ import {
   useColorModeValue,
   Stack,
 } from "@chakra-ui/react";
-import { Link } from '@chakra-ui/next-js'
+import { Link } from "@chakra-ui/next-js";
 import { HamburgerIcon, CloseIcon, AddIcon } from "@chakra-ui/icons";
 
-const Links = [{name:"Home",url:"/"}, {name:"Plans",url:"/#plans"}, {name:"Contact",url:"#contact"}];
+const Links = [
+  { name: "Home", url: "/" },
+  { name: "Plans", url: "/#plans" },
+  { name: "Contact", url: "#contact" },
+];
 
 const NavLink = (props) => {
   const { children } = props;
@@ -59,24 +63,17 @@ export default function Nav() {
           display={{ md: "none" }}
           onClick={isOpen ? onClose : onOpen}
         />
-        <HStack spacing={8} alignItems={"center"}>
+        <HStack spacing={8} alignItems={"center"}  w={"full"} justify="space-around" >
           <Box>Logo</Box>
           <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
             {Links.map((link) => (
-              <NavLink key={link.name} url={link.url} >{link.name}</NavLink>
+              <NavLink key={link.name} url={link.url}>
+                {link.name}
+              </NavLink>
             ))}
           </HStack>
-        </HStack>
-        <Flex alignItems={"center"}>
-          <Button
-            variant={"solid"}
-            colorScheme={"teal"}
-            size={"sm"}
-            mr={4}
-            leftIcon={<AddIcon />}
-          >
-            Action
-          </Button>
+      
+      
           <Menu>
             <MenuButton
               as={Button}
@@ -99,14 +96,16 @@ export default function Nav() {
               <MenuItem>Link 3</MenuItem>
             </MenuList>
           </Menu>
-        </Flex>
+         </HStack>
       </Flex>
 
       {isOpen ? (
         <Box pb={4} display={{ md: "none" }}>
           <Stack as={"nav"} spacing={4}>
             {Links.map((link) => (
-              <NavLink key={link} url={link.url}>{link.name}</NavLink>
+              <NavLink key={link} url={link.url}>
+                {link.name}
+              </NavLink>
             ))}
           </Stack>
         </Box>

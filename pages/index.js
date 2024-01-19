@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Nav from "components/Nav";
 import Hero from "components/Hero";
 import Partners from "components/Partners";
 import Info from "components/Info";
@@ -8,7 +7,6 @@ import Plans from "components/Plans";
 import Offers from "components/Offers";
 import FAQs from "components/FAQs";
 import DeviceSupport from "components/DeviceSupport";
-import Footer from "components/Footer";
 import { VStack } from "@chakra-ui/react";
 
 export default function Home() {
@@ -20,7 +18,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Nav />
+
       <Hero />
       <VStack
         as={"main"}
@@ -36,12 +34,6 @@ export default function Home() {
         <DeviceSupport />
         <FAQs />
       </VStack>
-      <Footer />
-      <style jsx global>{`
-        html {
-          scroll-behavior: smooth;
-        }
-      `}</style>
     </>
   );
 }
