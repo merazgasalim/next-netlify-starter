@@ -11,6 +11,12 @@ import {
   Text,
   Spinner,
   useToast,
+  FormControl,
+  FormLabel,
+  Input,
+  FormErrorMessage,
+  Select,
+  Divider,
 } from "@chakra-ui/react";
 import {
   PayPalScriptProvider,
@@ -18,8 +24,11 @@ import {
   usePayPalScriptReducer,
 } from "@paypal/react-paypal-js";
 import { TbDownloadOff } from "react-icons/tb";
+import { countryList } from "lib/constants";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 
-const ButtonWrapper = ({ plan }) => {
+const ButtonWrapper = ({ plan, isDisabled }) => {
   const toast = useToast();
   const [{ isPending, isResolved, isRejected }] = usePayPalScriptReducer();
 
@@ -123,13 +132,29 @@ const ButtonWrapper = ({ plan }) => {
       createOrder={createOrder}
       onApprove={onApprove}
       onError={onError}
+      disabled={isDisabled}
       //forceReRender={[nbrUits]}
     />
   );
 };
 
 export default function PayPal({ isOpen, onClose, plan }) {
-  console.log(plan);
+  const formik = useFormik({
+    initialValues: {
+      nickName: "",
+      email: "",
+      country: "",
+      mac: "",
+      type: "",
+    },
+    validationSchema: profileFormValidation,
+    onSubmit: (values) => {
+      console.log(values);
+      //alert(JSON.stringify(values, null, 2));
+      //handelUpdateProfile(values);
+    },
+  });
+  console.log(profileFormValidation.isValidSync(formik.values));
   return (
     <Modal
       isOpen={isOpen}
@@ -145,8 +170,83 @@ export default function PayPal({ isOpen, onClose, plan }) {
         <ModalHeader>IP TV Subscription</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
+          <form>
+            <FormControl
+              isInvalid={formik.touched.nickName && formik.errors.nickName}
+              isRequired
+            >
+              <FormLabel htmlFor="nickName"> Nickname</FormLabel>
+              <Input
+                id="nickName"
+                placeholder={"Nick Name"}
+                {...formik.getFieldProps("nickName")}
+              />
+              <FormErrorMessage>{formik.errors.nickName}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl
+              isInvalid={formik.touched.email && formik.errors.email}
+              isRequired
+            >
+              <FormLabel htmlFor="nickName"> Email</FormLabel>
+              <Input
+                id="email"
+                type={"email"}
+                placeholder={"ex: you@gmail.com"}
+                {...formik.getFieldProps("email")}
+              />
+              <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl
+              isInvalid={formik.touched.country && formik.errors.country}
+              isRequired
+            >
+              <FormLabel htmlFor="country"> Country</FormLabel>
+              <Select
+                id="country"
+                {...formik.getFieldProps("country")}
+                placeholder={"Country"}
+              >
+                {countryList.map((country, index) => (
+                  <option key={index} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </Select>
+              <FormErrorMessage>{formik.errors.country}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl isInvalid={formik.touched.mac && formik.errors.mac}>
+              <FormLabel htmlFor="mac"> Mac address (Optional) </FormLabel>
+              <Input
+                id="mac"
+                placeholder={"AA.BB.CC.DD.EE.FF"}
+                {...formik.getFieldProps("mac")}
+              />
+              <FormErrorMessage>{formik.errors.mac}</FormErrorMessage>
+            </FormControl>
+
+            <FormControl
+              isInvalid={formik.touched.type && formik.errors.type}
+              isRequired
+            >
+              <FormLabel htmlFor="type">Device Type</FormLabel>
+              <Select
+                id="type"
+                {...formik.getFieldProps("type")}
+                placeholder={"Type"}
+              >
+                <option value={"Smart TV"}>Smart TV</option>
+                <option value={"M3U"}>M3U</option>
+                <option value={"Enigma"}>Enigma</option>
+              </Select>
+              <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
+            </FormControl>
+          </form>
+          <Divider my={5} />
           <HStack justify={"space-between"} mb={5}>
-            <Text>{plan?.duration} </Text>
+            <Text>{plan?.duration} subscription. </Text>
             <Text>${plan?.price}</Text>
           </HStack>
           <PayPalScriptProvider
@@ -156,7 +256,10 @@ export default function PayPal({ isOpen, onClose, plan }) {
               currency: "USD",
             }}
           >
-            <ButtonWrapper showSpinner={false} plan={plan} />
+            <ButtonWrapper
+              plan={plan}
+              isDisabled={!profileFormValidation.isValidSync(formik.values)}
+            />
           </PayPalScriptProvider>
         </ModalBody>
         <ModalFooter>
@@ -168,3 +271,20 @@ export default function PayPal({ isOpen, onClose, plan }) {
     </Modal>
   );
 }
+
+const profileFormValidation = Yup.object({
+  nickName: Yup.string().min(3).max(15).required(),
+  email: Yup.string().email().required(),
+  country: Yup.string().required(),
+  mac: Yup.string()
+    .nullable()
+    .notRequired()
+    .matches(
+      /^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})|([0-9a-fA-F]{4}\\.[0-9a-fA-F]{4}\\.[0-9a-fA-F]{4})$/,
+      {
+        message: "MAC address should be in this format: AA:BB:CC:DD:EE:FF",
+        excludeEmptyString: true,
+      }
+    ),
+  type: Yup.string().required(),
+});
