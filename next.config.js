@@ -1,9 +1,12 @@
 /** @type {import('next').NextConfig} */
-
+const path = require("path");
 //module.exports = {
 const moduleExports = {
   reactStrictMode: true,
-
+  output: "standalone",
+  experimental: {
+    outputFileTracingRoot: path.join(__dirname, "../../"),
+  },
   env: {
     baseURL:
       process.env.NODE_ENV === "production"
