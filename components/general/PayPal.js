@@ -104,7 +104,7 @@ const ButtonWrapper = ({ plan, isDisabled }) => {
         .then((res) => {
           console.log(res);
           if (res.success) {
-            afterSuccess();
+            //afterSuccess();
           } else {
             toast({
               description: res.reason,
@@ -141,11 +141,11 @@ const ButtonWrapper = ({ plan, isDisabled }) => {
 export default function PayPal({ isOpen, onClose, plan }) {
   const formik = useFormik({
     initialValues: {
-      nickName: "",
-      email: "",
-      country: "",
-      mac: "",
-      type: "",
+      nickName: process.env.NODE_ENV === "production" ? "" : "Salimo",
+      email: process.env.NODE_ENV === "production" ? "" : "merazgasalim@hotmail.fr",
+      country: process.env.NODE_ENV === "production" ? "" : "Algeria",
+      mac: process.env.NODE_ENV === "production" ? "" : "00:11:22:33:44:55",
+      type: process.env.NODE_ENV === "production" ? "" : "M3U",
     },
     validationSchema: profileFormValidation,
     onSubmit: (values) => {
@@ -154,7 +154,7 @@ export default function PayPal({ isOpen, onClose, plan }) {
       //handelUpdateProfile(values);
     },
   });
-  console.log(profileFormValidation.isValidSync(formik.values));
+ 
   return (
     <Modal
       isOpen={isOpen}
