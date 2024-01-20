@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
-const path = require("path");
+
 //module.exports = {
 const moduleExports = {
   reactStrictMode: true,
-  output: "standalone",
   experimental: {
-    outputFileTracingRoot: path.join(__dirname, "../../"),
+    // this includes files from the monorepo base two directories up
+    outputFileTracingRoot: path.join(__dirname, '../../'),
   },
   env: {
     baseURL:
