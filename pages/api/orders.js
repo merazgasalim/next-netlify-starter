@@ -18,10 +18,10 @@ router
   })
 
   .put(async (req, res) => {
-    const { payPalDetails } = JSON.parse(req.body);
+    const { paypal } = JSON.parse(req.body);
 
     try {
-      let doc = await req.db.collection("products").insertOne(payPalDetails);
+      let doc = await req.db.collection("orders").insertOne(paypal);
       console.log(doc);
       return res.json({ success: true });
     } catch (err) {

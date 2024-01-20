@@ -15,6 +15,7 @@ import {
 import { minH } from "lib/constants";
 
 export default function index() {
+  
   return (
     <Container maxW={"6xl"} pt={20} minH={minH} >
       <Heading as={"h1"}>Orders</Heading>

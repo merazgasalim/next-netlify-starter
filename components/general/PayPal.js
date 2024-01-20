@@ -28,7 +28,7 @@ import { countryList } from "lib/constants";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-const ButtonWrapper = ({ plan, isDisabled }) => {
+const ButtonWrapper = ({ plan,profile, isDisabled }) => {
   const toast = useToast();
   const [{ isPending, isResolved, isRejected }] = usePayPalScriptReducer();
 
@@ -93,7 +93,8 @@ const ButtonWrapper = ({ plan, isDisabled }) => {
   const onApprove = (data, actions) => {
     return actions.order.get().then(function (details) {
       const body = {
-        payPalDetails: details,
+        paypal: {...details,...profile},
+        
       };
 
       return fetch(`/api/orders`, {
@@ -133,7 +134,7 @@ const ButtonWrapper = ({ plan, isDisabled }) => {
       onApprove={onApprove}
       onError={onError}
       disabled={isDisabled}
-      //forceReRender={[nbrUits]}
+      forceReRender={[profile]}
     />
   );
 };
@@ -258,6 +259,7 @@ export default function PayPal({ isOpen, onClose, plan }) {
           >
             <ButtonWrapper
               plan={plan}
+              profile={formik.values}
               isDisabled={!profileFormValidation.isValidSync(formik.values)}
             />
           </PayPalScriptProvider>
