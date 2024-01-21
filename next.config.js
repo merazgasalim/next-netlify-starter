@@ -3,10 +3,6 @@
 //module.exports = {
 const moduleExports = {
   reactStrictMode: true,
-  experimental: {
-    // this includes files from the monorepo base two directories up
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-  },
   env: {
     baseURL:
       process.env.NODE_ENV === "production"

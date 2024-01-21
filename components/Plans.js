@@ -14,9 +14,9 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import PayPal from "./general/PayPal";
-
+import { Offers } from "lib/constants";
 import { FaCheckCircle } from "react-icons/fa";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+
 import { useState } from "react";
 
 function PriceWrapper(props) {
@@ -131,9 +131,4 @@ export default function Plans() {
   );
 }
 
-const Offers = [
-  { duration: "1 month", price: "14.99" },
-  { duration: "3 months", price: "39.99" },
-  { duration: "6 months", price: "59.99" },
-  { duration: "12 months", price: "119.99" },
-];
+

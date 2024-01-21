@@ -79,12 +79,12 @@ const ButtonWrapper = ({ plan,profile, isDisabled }) => {
           amount: getAmount(),
           description: `${plan.duration} IPTV Subscription`,
           items: getItems(),
-          soft_descriptor: "incolive",
+          soft_descriptor: process.env.companyName,
         },
       ],
 
       application_context: {
-        brand_name: "incolive",
+        brand_name: process.env.companyName,
         shipping_preference: "NO_SHIPPING", // default is "GET_FROM_FILE"
       },
     });
@@ -142,7 +142,7 @@ const ButtonWrapper = ({ plan,profile, isDisabled }) => {
 export default function PayPal({ isOpen, onClose, plan }) {
   const formik = useFormik({
     initialValues: {
-      nickName: process.env.NODE_ENV === "production" ? "" : "Salimo",
+      name: process.env.NODE_ENV === "production" ? "" : "Salimo",
       email: process.env.NODE_ENV === "production" ? "" : "merazgasalim@hotmail.fr",
       country: process.env.NODE_ENV === "production" ? "" : "Algeria",
       mac: process.env.NODE_ENV === "production" ? "" : "00:11:22:33:44:55",
@@ -173,23 +173,23 @@ export default function PayPal({ isOpen, onClose, plan }) {
         <ModalBody>
           <form>
             <FormControl
-              isInvalid={formik.touched.nickName && formik.errors.nickName}
+              isInvalid={formik.touched.name && formik.errors.name}
               isRequired
             >
-              <FormLabel htmlFor="nickName"> Nickname</FormLabel>
+              <FormLabel htmlFor="name"> Full name</FormLabel>
               <Input
-                id="nickName"
-                placeholder={"Nick Name"}
-                {...formik.getFieldProps("nickName")}
+                id="name"
+                placeholder={"Full Name"}
+                {...formik.getFieldProps("name")}
               />
-              <FormErrorMessage>{formik.errors.nickName}</FormErrorMessage>
+              <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
             </FormControl>
 
             <FormControl
               isInvalid={formik.touched.email && formik.errors.email}
               isRequired
             >
-              <FormLabel htmlFor="nickName"> Email</FormLabel>
+              <FormLabel htmlFor="email"> Email</FormLabel>
               <Input
                 id="email"
                 type={"email"}
@@ -252,9 +252,11 @@ export default function PayPal({ isOpen, onClose, plan }) {
           </HStack>
           <PayPalScriptProvider
             options={{
-              clientId: "test",
+              //clientId: "test",
+              clientId:process.env.PayPal_ClientID,
               components: "buttons",
               currency: "USD",
+              intent: "capture",
             }}
           >
             <ButtonWrapper
@@ -275,7 +277,7 @@ export default function PayPal({ isOpen, onClose, plan }) {
 }
 
 const profileFormValidation = Yup.object({
-  nickName: Yup.string().min(3).max(15).required(),
+  name: Yup.string().min(4).max(100).required(),
   email: Yup.string().email().required(),
   country: Yup.string().required(),
   mac: Yup.string()
