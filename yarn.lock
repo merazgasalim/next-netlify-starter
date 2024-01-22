@@ -1329,6 +1329,15 @@
   dependencies:
     "@prismicio/types" "^0.2.4"
 
+"@prismicio/helpers@^2.3.9":
+  version "2.3.9"
+  resolved "https://registry.yarnpkg.com/@prismicio/helpers/-/helpers-2.3.9.tgz#dd2513a429644ed2d7a6fbc8955de6b2e9659fc0"
+  integrity sha512-p7Y1sG83A2YPZvptfAzuZA8xH1bdM2wGRjqSKW9Qa0rAnBq2OfVKRvwl9OMCZML4eLUMxSEUAEWRVSoKpQnJvA==
+  dependencies:
+    "@prismicio/richtext" "^2.1.4"
+    "@prismicio/types" "^0.2.7"
+    imgix-url-builder "^0.0.3"
+
 "@prismicio/mocks@2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@prismicio/mocks/-/mocks-2.0.0.tgz#0a037f036ed211a3d46b1b2baa98bbcae5ad3a28"
@@ -1377,7 +1386,7 @@
   dependencies:
     "@prismicio/richtext" "^2.1.5"
 
-"@prismicio/richtext@^2.1.5":
+"@prismicio/richtext@^2.1.4", "@prismicio/richtext@^2.1.5":
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/@prismicio/richtext/-/richtext-2.1.5.tgz#8a433939765bead2a521150fb15af0b49c6af421"
   integrity sha512-Sf6iCsciPmfK3uQeFmeY9RTRSuhrCVzyU39OkiJ1VJn8O0531pKapGoWS+5WGxouJtE5+jGqV8L+L2mKP7NkXQ==
@@ -3114,6 +3123,11 @@ ieee754@^1.1.13, ieee754@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
+
+imgix-url-builder@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/imgix-url-builder/-/imgix-url-builder-0.0.3.tgz#9f386de64cdd1363d352a7f6313fd7dacd8fb282"
+  integrity sha512-8Oc2Cn4+jF06sEfJcVPlWYfD2F6RjrwIMbk1xEzux8unoB5LsvFc/GL1BQ47HPaeE12ReX2nMUcjUslGYWLxHA==
 
 imgix-url-builder@^0.0.4:
   version "0.0.4"
