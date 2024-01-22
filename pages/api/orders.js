@@ -4,7 +4,7 @@ const checkoutNodeJssdk = require("@paypal/checkout-server-sdk");
 import payPalClient from "lib/payPalClient";
 
 import database from "middlewares/database";
-import { Offers } from "lib/constants";
+import { Offers, Trial } from "lib/constants";
 const { ObjectId } = require("mongodb");
 
 const router = createRouter();
@@ -19,7 +19,7 @@ router
   //Retrieve orders
   .post(async (req, res) => {
     const { lastOrderId } = req.body;
-    console.log(lastOrderId)
+    console.log(lastOrderId);
     try {
       const orders = await req.db
         .collection("orders")
@@ -73,13 +73,23 @@ router
       );
 
       if (
-        selectedPlan.price !==
+        selectedPlan?.price !==
         paypal.purchase_units[0].amount.breakdown.item_total.value
-      )
-        return res.json({
-          success: false,
-          reason: `Your Order ID : ${orderID} is under review!,  Please contact us -- ${ContactEmail}`,
-        });
+      ) {
+        //Check if Trial
+        if (
+          paypal.purchase_units[0].description.replace(
+            " IPTV Subscription",
+            ""
+          ) !== Trial.duration &&
+          paypal.purchase_units[0].amount.breakdown.item_total.value !==
+            Trial.price
+        )
+          return res.json({
+            success: false,
+            reason: `Your Order ID : ${orderID} is under review!,  Please contact us -- ${ContactEmail}`,
+          });
+      }
 
       //3. Save the transaction in your database
       //If same order id then it will be rejected --> same database id

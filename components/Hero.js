@@ -10,12 +10,19 @@ import {
   ListItem,
   Stack,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
+import Link from "next/link";
 
 import Image from "next/image";
 import { IoMdCheckboxOutline } from "react-icons/io";
+import PayPal from "./general/PayPal";
+import { Trial } from "lib/constants";
+import { useState } from "react";
 
 export default function Hero() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [plan, setPlan] = useState();
   return (
     <Container
       as={"header"}
@@ -129,19 +136,26 @@ export default function Hero() {
             </ListItem>
           </Stack>
           <HStack pt={5} justify="center">
-            <Button colorScheme={"pink"} size={{ base: "sm", md: "md" }}>
+            <Button as={Link} href="/#plans" colorScheme={"pink"} size={{ base: "sm", md: "md" }}>
               Subscribe Now
             </Button>
             <Button
               colorScheme={"pink"}
               variant="outline"
               size={{ base: "sm", md: "md" }}
+              onClick={() => {
+                setPlan(Trial);
+                onOpen();
+              }}
             >
               24 Hours Free Trial
             </Button>
           </HStack>
         </Box>
       </Flex>
+      {isOpen && plan && (
+        <PayPal isOpen={isOpen} onClose={onClose} plan={plan} />
+      )}
     </Container>
   );
 }

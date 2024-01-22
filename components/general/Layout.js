@@ -18,6 +18,7 @@ function Layout({ children }) {
       <style global jsx>{`
         html {
           scroll-behavior: smooth;
+          scroll-padding: 4em;
         }
         body {
           overflow-x: hidden;

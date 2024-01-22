@@ -14,7 +14,7 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 import PayPal from "./general/PayPal";
-import { Offers } from "lib/constants";
+import { Offers, Trial } from "lib/constants";
 import { FaCheckCircle } from "react-icons/fa";
 
 import { useState } from "react";
@@ -105,7 +105,15 @@ export default function Plans() {
                 </ListItem>
               </List>
               <VStack w="80%" pt={7}>
-                <Button w="full" colorScheme="red" variant="outline">
+                <Button
+                  w="full"
+                  colorScheme="red"
+                  variant="outline"
+                  onClick={() => {
+                    setPlan(Trial);
+                    onOpen();
+                  }}
+                >
                   Start trial
                 </Button>
                 <Button
@@ -130,5 +138,3 @@ export default function Plans() {
     </Container>
   );
 }
-
-
