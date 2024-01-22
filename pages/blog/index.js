@@ -8,7 +8,7 @@ import { PrismicRichText } from "@prismicio/react";
 import { PrismicNextImage } from "@prismicio/next";
 import { asText } from "@prismicio/client";
 
-//import { components } from "@/slices";
+
 
 export default function Blog({ blogHomePage }) {
   return (
