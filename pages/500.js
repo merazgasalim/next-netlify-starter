@@ -15,17 +15,11 @@ export default function Custom500() {
       minH={minH}
     >
       <Box>
-      <Heading as={"h2"} mt={5}>
+        <Heading as={"h2"} mt={5}>
           500
         </Heading>
-        <Image
-          src={Logo}
-          alt="Happy Puzzling"
-          style={{ margin: "0 auto" }}
-          priority={true}
-          placeholder="blur"
-        />
-       
+        <Image src={Logo} alt="" style={{ margin: "0 auto" }} priority={true} />
+
         <Heading as={"h1"}>Server-side error occurred!</Heading>
         <Text color={"gray.400"} fontSize="lg">
           Something went wrong, Please refresh and try again!

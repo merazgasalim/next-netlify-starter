@@ -20,6 +20,7 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 const Links = [
   { name: "Home", url: "/" },
   { name: "Plans", url: "/#plans" },
+  { name: "Tutorials", url: "/blog" },
   { name: "Contact", url: "/#contact" },
 ];
 
