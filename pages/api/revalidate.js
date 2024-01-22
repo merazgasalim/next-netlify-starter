@@ -4,7 +4,7 @@ import * as prismic from '@prismicio/client'
 import * as prismicH from '@prismicio/helpers'
 
 // Import your app's Link Resolver (if your app uses one)
-import { linkResolver } from 'prismicio'
+import { linkResolver,repositoryName } from 'prismicio'
 
 /**
  * This API endpoint will be called by a Prismic webhook. The webhook
@@ -22,7 +22,7 @@ export default async function handler(req, res) {
 
     // If you have a `createClient()` function defined elsewhere in
     // your app, use that instead
-    const client = prismic.createClient('your-repo-name')
+    const client = prismic.createClient(repositoryName)
 
     // Get a list of URLs for any new, updated, or deleted documents
     const documents = await client.getAllByIDs(req.body.documents)
