@@ -42,7 +42,7 @@ export default function Hero() {
         top="0"
         w={"100%"}
         h="100%"
-        bg="rgba(0,0,0,0.7)"
+        bg="rgba(0,0,0,0.8)"
       ></Box>
       <Box
         pos={"absolute"}
@@ -72,7 +72,7 @@ export default function Hero() {
         <Box>
           <Heading
             as={"h1"}
-            color="orange.400"
+            color="#FBB355"
             fontSize={{ base: "2xl", md: "5xl", lg: "6xl" }}
             mb={5}
           >
@@ -136,13 +136,27 @@ export default function Hero() {
             </ListItem>
           </Stack>
           <HStack pt={5} justify="center">
-            <Button as={Link} href="/#plans" colorScheme={"pink"} size={{ base: "sm", md: "md" }}>
+            <Button
+              as={Link}
+              href="/#plans"
+              size={{ base: "sm", md: "md" }}
+              color="white"
+              bg="#FA6663"
+              _hover={{
+                textDecoration: "none",
+                bg: "#8A56C2",
+              }}
+            >
               Subscribe Now
             </Button>
             <Button
-              colorScheme={"pink"}
               variant="outline"
+              color="white"
+              _hover={{
+                bg: "#FA6663",
+              }}
               size={{ base: "sm", md: "md" }}
+              borderColor="#FA6663"
               onClick={() => {
                 setPlan(Trial);
                 onOpen();

@@ -1,8 +1,11 @@
 import { Container, Heading, Text, Link } from "@chakra-ui/react";
+import { NextSeo } from "next-seo";
 import { minH } from "lib/constants";
 
 export default function RefundPolicy() {
   return (
+    <>
+    <NextSeo title="Calcelation Policy" description="Calcelation Policy" />
     <Container as={"main"} maxW="6xl" pt={20} minH={minH}>
       <Heading as={"h1"} mb={5}>
         Calcelation Policy
@@ -56,6 +59,6 @@ export default function RefundPolicy() {
         as soon as possible (including your # order number and cancel/change
         request) and we can help.f
       </Text>
-    </Container>
+    </Container></>
   );
 }

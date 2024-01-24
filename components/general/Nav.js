@@ -1,23 +1,19 @@
 import {
   Box,
-  Flex,
-  Avatar,
   HStack,
   IconButton,
   Button,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
   useOutsideClick,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
+import Image from "next/image";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useRef, useState } from "react";
+
+import Logo from "public/logo.png";
 
 const Links = [
   { name: "Home", url: "/" },
@@ -48,12 +44,12 @@ const NavLink = (props) => {
 
 export default function Nav() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const ref = useRef()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const ref = useRef();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   useOutsideClick({
     ref: ref,
     handler: () => onClose(),
-  })
+  });
 
   return (
     <Box
@@ -79,7 +75,9 @@ export default function Nav() {
           display={{ md: "none" }}
           onClick={isOpen ? onClose : onOpen}
         />
-        <Box>Logo</Box>
+        <Box as={Link} href="/" maxW={150}>
+          <Image src={Logo} alt="TV Streams" priority={true} />
+        </Box>
         <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
           {Links.map((link) => (
             <NavLink key={link.name} url={link.url}>
@@ -90,11 +88,14 @@ export default function Nav() {
         <Button
           as={Link}
           href="/my-account"
-          colorScheme={"facebook"}
+          variant={"outline"}
           _hover={{
             textDecoration: "none",
+            bg:"#8A56C2",
+            color:"white"
           }}
           size={{ base: "sm", md: "md" }}
+          borderColor="#8A56C2"
         >
           Client Area
         </Button>

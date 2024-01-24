@@ -106,9 +106,14 @@ export default function Plans() {
               </List>
               <VStack w="80%" pt={7}>
                 <Button
-                  w="full"
-                  colorScheme="red"
+                  w="full"                  
                   variant="outline"
+                  color="#FA6663"
+                  _hover={{
+                    bg: "#FA6663",
+                    color:"white"
+                  }}
+                  borderColor="#FA6663"
                   onClick={() => {
                     setPlan(Trial);
                     onOpen();
@@ -118,7 +123,12 @@ export default function Plans() {
                 </Button>
                 <Button
                   w="full"
-                  colorScheme="red"
+                  bg="#FA6663"
+                  color={"white"}
+                  _hover={{
+                    textDecoration: "none",
+                    bg: "#8A56C2",
+                  }}
                   onClick={() => {
                     setPlan(plan);
                     onOpen();

@@ -33,7 +33,12 @@ const ScrollUp = () => {
   return (
     <IconButton
       isRound
-      colorScheme="purple"
+      bg="#8A56C2"
+      color={"white"}
+      _hover={{
+        textDecoration: "none",
+        bg: "#8A56FF",
+      }}
       aria-label="scroll to top"
       size="sm"
       icon={<IoIosArrowUp size={24} />}

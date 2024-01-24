@@ -10,10 +10,11 @@ import {
   useColorModeValue,
   Button,
 } from "@chakra-ui/react";
+import Link from "next/link";
 
 export default function Info() {
   return (
-    <Container as={"section"} maxW={"6xl"} >
+    <Container as={"section"} maxW={"6xl"}>
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={10}>
         <Stack spacing={4}>
           <Heading>More to Stream.</Heading>
@@ -35,16 +36,25 @@ export default function Info() {
               />
             }
           >
-            <Button colorScheme={"pink"}>Learn More</Button>
+            <Button
+              as={Link}
+              href="/blog"
+              bg={"#8A56C2"}
+              color="white"
+              _hover={{
+                textDecoration: "none",
+                bg: "#8A56FF",
+              }}
+            >
+              Learn More
+            </Button>
           </Stack>
         </Stack>
-        <Flex justify={"center"}  >
+        <Flex justify={"center"}>
           <Image
             rounded={"md"}
             alt={"feature image"}
-            src={
-              "/images/more_stream.jpg"
-            }
+            src={"/images/more_stream.jpg"}
             objectFit={"cover"}
           />
         </Flex>

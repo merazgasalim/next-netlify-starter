@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
+import { NextSeo } from "next-seo";
 import {
   Box,
   Heading,
@@ -263,7 +264,7 @@ export default function Orders() {
   //Load More order when the end reached
   const [observerDisconnected, setObserverDisconnected] = useState(false);
   const ordersLoaderRef = useRef();
-  console.log(orders)
+  console.log(orders);
   const getNextOrdersPage = useCallback(async () => {
     try {
       const response = await fetch("/api/orders", {
@@ -320,58 +321,72 @@ export default function Orders() {
 
   const [deletedOrders, setDeletedOrders] = useState([]);
   return (
-    <Box maxW="7xl" mx={"auto"} pt={20} px={{ base: 2, sm: 12, md: 17 }} minH={minH} >
-      <Heading textAlign={"center"} fontSize={"2xl"} fontWeight={"bold"}>
-        Orders
-      </Heading>
-      <Box overflowX={"auto"}>
-        <Table variant="striped" colorScheme="twitter" size={"sm"}>
-          <Thead>
-            <Tr>
-              <Th>Full name</Th>
-              <Th>Email</Th>
-              <Th>Country</Th>
-              <Th>Type</Th>
-              <Th>MAC</Th>
-              <Th>Duration</Th>
-              <Th>Status</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {orders.map((order) => (
-              <Tr
-                key={order._id}
-                style={{
-                  textDecoration: deletedOrders.includes(order._id)
-                    ? "line-through"
-                    : "none",
-                }}
-              >
-                <Td>{order.name}</Td>
-                <Td>{order.email}</Td>
-                <Td>{order.country}</Td>
-                <Td>{order.type}</Td>
-                <Td>{order.mac}</Td>
-                <Td>{order.purchase_units[0].description.replace(" IPTV Subscription", "")}</Td>
-                <Td>{order.stutus}</Td>
-
-                <Td>
-                  <OrderActions
-                    order={order}
-                    setDeletedOrders={setDeletedOrders}
-                  />
-                </Td>
+    <>
+      <NextSeo title="Admin Account" description="Admin Account" nofollow noindex />
+      <Box
+        maxW="7xl"
+        mx={"auto"}
+        pt={20}
+        px={{ base: 2, sm: 12, md: 17 }}
+        minH={minH}
+      >
+        <Heading textAlign={"center"} fontSize={"2xl"} fontWeight={"bold"}>
+          Orders
+        </Heading>
+        <Box overflowX={"auto"}>
+          <Table variant="striped" colorScheme="twitter" size={"sm"}>
+            <Thead>
+              <Tr>
+                <Th>Full name</Th>
+                <Th>Email</Th>
+                <Th>Country</Th>
+                <Th>Type</Th>
+                <Th>MAC</Th>
+                <Th>Duration</Th>
+                <Th>Status</Th>
               </Tr>
-            ))}
-          </Tbody>
-        </Table>
+            </Thead>
+            <Tbody>
+              {orders.map((order) => (
+                <Tr
+                  key={order._id}
+                  style={{
+                    textDecoration: deletedOrders.includes(order._id)
+                      ? "line-through"
+                      : "none",
+                  }}
+                >
+                  <Td>{order.name}</Td>
+                  <Td>{order.email}</Td>
+                  <Td>{order.country}</Td>
+                  <Td>{order.type}</Td>
+                  <Td>{order.mac}</Td>
+                  <Td>
+                    {order.purchase_units[0].description.replace(
+                      " IPTV Subscription",
+                      ""
+                    )}
+                  </Td>
+                  <Td>{order.stutus}</Td>
+
+                  <Td>
+                    <OrderActions
+                      order={order}
+                      setDeletedOrders={setDeletedOrders}
+                    />
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
+        </Box>
+        {!observerDisconnected && (
+          <Center m={5} ref={ordersLoaderRef}>
+            <Spinner size={"md"} />
+          </Center>
+        )}
       </Box>
-      {!observerDisconnected && (
-        <Center m={5} ref={ordersLoaderRef}>
-          <Spinner size={"md"} />
-        </Center>
-      )}
-    </Box>
+    </>
   );
 }
 
