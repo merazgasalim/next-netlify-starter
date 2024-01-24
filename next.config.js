@@ -11,9 +11,10 @@ const moduleExports = {
 
     PayPal_ClientID:
       process.env.NODE_ENV === "production"
-        ? "AWiUfAW3bzZcZ_uxBMEo1mY11LpzY4dtsWjrrvWGxhxjGygA1lxaEJJi337t0NGNhjKm3BJE-Lbc0kKh"
+        ? //? "AWiUfAW3bzZcZ_uxBMEo1mY11LpzY4dtsWjrrvWGxhxjGygA1lxaEJJi337t0NGNhjKm3BJE-Lbc0kKh"
+          "Adj14oLBZL0rUJ8-bRHvHWcvH2m1ZFrN0CiRqc2RLuWO5YGPxfBftbDeo-V6uabEgagNtlvTgo8dtkAh"
         : "Adj14oLBZL0rUJ8-bRHvHWcvH2m1ZFrN0CiRqc2RLuWO5YGPxfBftbDeo-V6uabEgagNtlvTgo8dtkAh",
-    supportMail: "support@sample.com",
+    supportMail: "support@tvstreams.net",
     companyName: "TV STREAMS",
   },
   images: {
