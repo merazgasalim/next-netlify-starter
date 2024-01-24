@@ -11,7 +11,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 
-export default function Benefits() {
+export default function Benefits() {//ok
   return (
     <Container as={"section"} maxW={"full"}  px={0}>
       <SimpleGrid columns={{ base: 1, md: 2 }} spacing={0}>
