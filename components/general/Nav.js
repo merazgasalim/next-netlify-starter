@@ -13,9 +13,11 @@ import {
   useDisclosure,
   useColorModeValue,
   Stack,
+  useOutsideClick,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+import { useRef, useState } from "react";
 
 const Links = [
   { name: "Home", url: "/" },
@@ -34,9 +36,10 @@ const NavLink = (props) => {
       rounded={"md"}
       _hover={{
         textDecoration: "none",
-        bg: useColorModeValue("gray.200", "gray.700"),
+        bg: "gray.200",
       }}
       href={props.url}
+      fontWeight="bold"
     >
       {children}
     </Box>
@@ -45,17 +48,30 @@ const NavLink = (props) => {
 
 export default function Nav() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const ref = useRef()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  useOutsideClick({
+    ref: ref,
+    handler: () => onClose(),
+  })
 
   return (
     <Box
       as="nav"
       bg={useColorModeValue("gray.100", "gray.900")}
-      px={4}
+      px={{ base: 1, md: 4 }}
       pos="fixed"
       zIndex={9}
       width="full"
+      boxShadow={"lg"}
     >
-      <Flex h={16} alignItems={"center"} justifyContent={"space-between"}>
+      <HStack
+        spacing={8}
+        alignItems={"center"}
+        w={"full"}
+        justify={{ base: "space-between", md: "space-around" }}
+        py={2}
+      >
         <IconButton
           size={"md"}
           icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
@@ -63,27 +79,29 @@ export default function Nav() {
           display={{ md: "none" }}
           onClick={isOpen ? onClose : onOpen}
         />
-        <HStack
-          spacing={8}
-          alignItems={"center"}
-          w={"full"}
-          justify="space-around"
-        >
-          <Box>Logo</Box>
-          <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
-            {Links.map((link) => (
-              <NavLink key={link.name} url={link.url}>
-                {link.name}
-              </NavLink>
-            ))}
-          </HStack>
-
-          <Button as={Link} href="/my-account" colorScheme={"purple"} >Client Area</Button>
+        <Box>Logo</Box>
+        <HStack as={"nav"} spacing={4} display={{ base: "none", md: "flex" }}>
+          {Links.map((link) => (
+            <NavLink key={link.name} url={link.url}>
+              {link.name}
+            </NavLink>
+          ))}
         </HStack>
-      </Flex>
+        <Button
+          as={Link}
+          href="/my-account"
+          colorScheme={"facebook"}
+          _hover={{
+            textDecoration: "none",
+          }}
+          size={{ base: "sm", md: "md" }}
+        >
+          Client Area
+        </Button>
+      </HStack>
 
       {isOpen ? (
-        <Box pb={4} display={{ md: "none" }}>
+        <Box ref={ref} pb={4} display={{ md: "none" }}>
           <Stack as={"nav"} spacing={4}>
             {Links.map((link) => (
               <NavLink key={link} url={link.url}>

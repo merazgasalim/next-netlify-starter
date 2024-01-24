@@ -246,7 +246,7 @@ export default function PayPal({ isOpen, onClose, plan }) {
             </FormControl>
           </form>
           <Divider my={5} />
-          <HStack justify={"space-between"} mb={5}>
+          <HStack justify={"space-between"} mb={5} fontWeight="bold" >
             <Text>{plan?.duration} subscription. </Text>
             <Text>${plan?.price}</Text>
           </HStack>
