@@ -115,6 +115,56 @@ router
       console.log(err);
       return res.json({ success: false, err: err });
     }
+  })
+  //Update order
+  .patch(async (req, res) => {
+    const { orderId, action } = req.body;
+
+    try {
+      switch (action) {
+        case "Delete":
+          await req.db
+            .collection("orders")
+            .deleteOne({ _id: new ObjectId(orderId) });
+          return res.status(200).json({ reason: "success" });
+        case "Approve":
+          await req.db
+            .collection("orders")
+            .updateOne(
+              { _id: new ObjectId(orderId) },
+              { $set: { stutus: "Delivered" } }
+            );
+          return res.status(200).json({ reason: "success" });
+        case "Ban":
+          await req.db
+            .collection("orders")
+            .updateOne(
+              { _id: new ObjectId(orderId) },
+              { $set: { stutus: "Banned" } }
+            );
+          return res.status(200).json({ reason: "success" });
+        default:
+          return res.status(404).json({ reason: "unauthorized" });
+      }
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json({ reason: "server error" });
+    }
+  })
+  // Get user subscriptions
+  .get(async (req, res) => {
+    const { customerEmail } = req.query;
+    console.log(lastOrderId);
+    try {
+      const subscriptions = await req.db
+        .collection("orders")
+        .findMany({ email: customerEmail });
+
+      return res.status(200).json({ subscriptions });
+    } catch (err) {
+      console.log(err);
+      return res.status(404).json({ reason: "server error" });
+    }
   });
 
 //export const config = {

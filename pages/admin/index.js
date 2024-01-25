@@ -27,21 +27,20 @@ import {
   Button,
   Text,
   useDisclosure,
-  HStack,
-  Tooltip,
   AlertDialog,
   AlertDialogBody,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
+  SimpleGrid,
 } from "@chakra-ui/react";
 
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { FcApprove } from "react-icons/fc";
 import { BsInfoLg } from "react-icons/bs";
 import { FaBan } from "react-icons/fa";
-import { FiCopy } from "react-icons/fi";
+
 import { AiOutlineUserDelete } from "react-icons/ai";
 
 import { minH } from "lib/constants";
@@ -67,10 +66,32 @@ const OrderActions = ({ order, setDeletedOrders }) => {
         variant="outline"
       />
       <MenuList>
-        <MenuItem color="green" icon={<FcApprove />}>
+        <MenuItem
+          color="green"
+          icon={<FcApprove />}
+          onClick={() =>
+            setDialogInfo({
+              orderId: order._id,
+              title: "Approve Customer",
+              message: "Are you sure? This order will be marked as delivred.",
+              actionName: "Approve",
+            })
+          }
+        >
           Approve
         </MenuItem>
-        <MenuItem color="orange" icon={<FaBan />}>
+        <MenuItem
+          color="orange"
+          icon={<FaBan />}
+          onClick={() =>
+            setDialogInfo({
+              orderId: order._id,
+              title: "Ban Customer",
+              message: "Are you sure? This order will be marked as banned.",
+              actionName: "Ban",
+            })
+          }
+        >
           Ban
         </MenuItem>
         <MenuItem
@@ -78,7 +99,7 @@ const OrderActions = ({ order, setDeletedOrders }) => {
           icon={<AiOutlineUserDelete />}
           onClick={() =>
             setDialogInfo({
-              userId: order._id,
+              orderId: order._id,
               title: "Delete Customer",
               message: "Are you sure? You can't undo this action afterwards.",
               actionName: "Delete",
@@ -102,88 +123,22 @@ const OrderActions = ({ order, setDeletedOrders }) => {
           <ModalHeader>Full info.</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <HStack justify={"space-between"}>
-              <Text>User name: {order.userName}</Text>
-              <Text>Full name: {order.name ?? order.fullName}</Text>
-              <Text>Use case: {order.useCase}</Text>
-            </HStack>
-            <HStack justify={"space-between"}>
-              <Text>Age: {order.age}</Text>
+            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={2}>
+              <Text>Name: {order.name}</Text>
+              <Text>
+                Name (PayPal): {order.payer.name.given_name}
+                {order.payer.name.surname}
+              </Text>
+              <Text>Status: {order.stutus}</Text>
+              <Text>Country: {order.country}</Text>
+              <Text>Country (PayPal): {order.payer.address.country_code}</Text>
+              <Text>Date: {new Date(order.date).toLocaleDateString()}</Text>
+              <Text>Type: {order.type}</Text>
+              <Text>MAC: {order.mac}</Text>
+              <Text>Payment: ${order.purchase_units[0].amount.value} </Text>
               <Text>Email: {order.email}</Text>
-              <Text>Phone: {order.phone}</Text>
-            </HStack>
-            <Text>Address: {order.address}</Text>
-            <Text>Joined Courses: {order.myCourses?.length}</Text>
-            <Table variant="striped" colorScheme="twitter" size={"xs"}>
-              <Thead>
-                <Tr>
-                  <Th>Course ID</Th>
-                  <Th>Approvement</Th>
-                  <Th>Actions</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {order.myCourses?.map((course, index) => (
-                  <Tr key={index}>
-                    <Td>{course.courseId}</Td>
-                    <Td>{course.approved ? "Yes" : "No"}</Td>
-                    <Td>
-                      <Tooltip hasArrow label="copy course id" bg="gray.600">
-                        <IconButton
-                          aria-label="copy course id"
-                          icon={<FiCopy />}
-                          onClick={() =>
-                            navigator?.clipboard.writeText(course.courseId)
-                          }
-                        />
-                      </Tooltip>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-            <Text>Students: {order.myStudents?.length}</Text>
-            <Table variant="striped" colorScheme="twitter" size={"xs"}>
-              <Thead>
-                <Tr>
-                  <Th>Student ID</Th>
-                  <Th>Course ID</Th>
-                  <Th>Approvement</Th>
-                  <Th>Actions</Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {order.myStudents?.map((student, index) => (
-                  <Tr key={index}>
-                    <Td>{student.studentId}</Td>
-                    <Td>{student.courseId}</Td>
-                    <Td>{student.approved ? "Yes" : "No"}</Td>
-                    <Td>
-                      <HStack>
-                        <Tooltip hasArrow label="copy course id" bg="gray.600">
-                          <IconButton
-                            aria-label="copy course id"
-                            icon={<FiCopy />}
-                            onClick={() =>
-                              navigator?.clipboard.writeText(student.courseId)
-                            }
-                          />
-                        </Tooltip>
-                        <Tooltip hasArrow label="copy student id" bg="gray.600">
-                          <IconButton
-                            aria-label="copy student id"
-                            icon={<FiCopy />}
-                            onClick={() =>
-                              navigator?.clipboard.writeText(student.studentId)
-                            }
-                          />
-                        </Tooltip>
-                      </HStack>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
+              <Text>Email (PayPal) : {order.payer.email_address}</Text>
+            </SimpleGrid>
           </ModalBody>
           <ModalFooter>
             <Button onClick={onClose}>Close</Button>
@@ -240,7 +195,7 @@ const Confirmation = ({ isOpen, setIsOpen, dialogInfo, setDeletedOrders }) => {
               ml={3}
               onClick={() =>
                 handelUpdateUser(
-                  dialogInfo.userId,
+                  dialogInfo.orderId,
                   dialogInfo.actionName,
                   setLoading,
                   toast,
@@ -264,7 +219,7 @@ export default function Orders() {
   //Load More order when the end reached
   const [observerDisconnected, setObserverDisconnected] = useState(false);
   const ordersLoaderRef = useRef();
-  console.log(orders);
+ 
   const getNextOrdersPage = useCallback(async () => {
     try {
       const response = await fetch("/api/orders", {
@@ -322,7 +277,12 @@ export default function Orders() {
   const [deletedOrders, setDeletedOrders] = useState([]);
   return (
     <>
-      <NextSeo title="Admin Account" description="Admin Account" nofollow noindex />
+      <NextSeo
+        title="Admin Account"
+        description="Admin Account"
+        nofollow
+        noindex
+      />
       <Box
         maxW="7xl"
         mx={"auto"}
@@ -367,7 +327,19 @@ export default function Orders() {
                       ""
                     )}
                   </Td>
-                  <Td>{order.stutus}</Td>
+                  <Td
+                    color={
+                      order.stutus === "Pending"
+                        ? "red.500"
+                        : order.stutus === "Delivered"
+                          ? "green.500"
+                          : order.stutus === "Banned"
+                            ? "orange.500"
+                            : "black"
+                    }
+                  >
+                    {order.stutus}
+                  </Td>
 
                   <Td>
                     <OrderActions
@@ -391,7 +363,7 @@ export default function Orders() {
 }
 
 const handelUpdateUser = async (
-  userId,
+  orderId,
   action,
   setLoading,
   toast,
@@ -404,7 +376,7 @@ const handelUpdateUser = async (
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        userId,
+        orderId,
         action,
       }),
     });
@@ -416,7 +388,8 @@ const handelUpdateUser = async (
         duration: 9000,
         isClosable: true,
       });
-      setDeletedOrders((prevState) => [...prevState, userId]);
+      if (action === "Delete")
+        setDeletedOrders((prevState) => [...prevState, orderId]);
       setIsOpen(false);
     } else {
       toast({
