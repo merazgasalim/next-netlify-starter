@@ -45,7 +45,7 @@ import { AiOutlineUserDelete } from "react-icons/ai";
 
 import { minH } from "lib/constants";
 
-const OrderActions = ({ order, setDeletedOrders }) => {
+const OrderActions = ({ order, setDeletedOrders, setOrders }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   //Dialag confirmation
   const [isOpenDialog, setIsOpenDialog] = useState(false);
@@ -151,6 +151,7 @@ const OrderActions = ({ order, setDeletedOrders }) => {
           setIsOpen={setIsOpenDialog}
           dialogInfo={dialogInfo}
           setDeletedOrders={setDeletedOrders}
+          setOrders={setOrders}
         />
       )}
     </Menu>
@@ -158,7 +159,13 @@ const OrderActions = ({ order, setDeletedOrders }) => {
 };
 
 //Ban Approve Delete Confirmation Dialogue
-const Confirmation = ({ isOpen, setIsOpen, dialogInfo, setDeletedOrders }) => {
+const Confirmation = ({
+  isOpen,
+  setIsOpen,
+  dialogInfo,
+  setDeletedOrders,
+  setOrders,
+}) => {
   const cancelRef = useRef();
   const toast = useToast();
   //Approve, Ban or delete user
@@ -200,7 +207,8 @@ const Confirmation = ({ isOpen, setIsOpen, dialogInfo, setDeletedOrders }) => {
                   setLoading,
                   toast,
                   setDeletedOrders,
-                  setIsOpen
+                  setIsOpen,
+                  setOrders
                 )
               }
             >
@@ -219,7 +227,7 @@ export default function Orders() {
   //Load More order when the end reached
   const [observerDisconnected, setObserverDisconnected] = useState(false);
   const ordersLoaderRef = useRef();
- 
+
   const getNextOrdersPage = useCallback(async () => {
     try {
       const response = await fetch("/api/orders", {
@@ -345,6 +353,7 @@ export default function Orders() {
                     <OrderActions
                       order={order}
                       setDeletedOrders={setDeletedOrders}
+                      setOrders={setOrders}
                     />
                   </Td>
                 </Tr>
@@ -368,7 +377,8 @@ const handelUpdateUser = async (
   setLoading,
   toast,
   setDeletedOrders,
-  setIsOpen
+  setIsOpen,
+  setOrders
 ) => {
   setLoading(true);
   try {
@@ -388,8 +398,25 @@ const handelUpdateUser = async (
         duration: 9000,
         isClosable: true,
       });
-      if (action === "Delete")
+      if (action === "Delete") {
         setDeletedOrders((prevState) => [...prevState, orderId]);
+      } else {
+        setOrders((prevState) => {
+          let orders = [...prevState];
+          const orderIdx = orders.map((ord) => ord._id).indexOf(orderId);
+
+          //let order = prevState.find((odr) => odr._id === orderId);
+          orders[orderIdx].stutus =
+            action === "Ban"
+              ? "Banned"
+              : action === "Approve"
+                ? "Delivered"
+                : "";
+          console.log(prevState, orderId);
+
+          return orders;
+        });
+      }
       setIsOpen(false);
     } else {
       toast({

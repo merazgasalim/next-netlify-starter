@@ -12,6 +12,7 @@ import { Link } from "@chakra-ui/next-js";
 import Image from "next/image";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useRef, useState } from "react";
+import Login from "./Login";
 
 import Logo from "public/logo.png";
 
@@ -84,6 +85,7 @@ export default function Nav() {
               {link.name}
             </NavLink>
           ))}
+          <Login/>
         </HStack>
         <Button
           as={Link}
