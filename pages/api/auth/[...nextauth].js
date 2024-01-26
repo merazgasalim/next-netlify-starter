@@ -1,8 +1,14 @@
 import NextAuth from "next-auth";
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
+import clientPromise from "lib/mongoClient";
+import { ObjectId } from "mongodb";
+
 export const authOptions = {
+  adapter: MongoDBAdapter(clientPromise),
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -11,9 +17,24 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log(credentials)
+        console.log(credentials.email);
         // Add logic to verify credentials here
         if (!credentials) return null;
+        const MongoClient = await clientPromise;
+        const user = await MongoClient.db()
+          .collection("customers")
+          .findOne({
+            _id: new ObjectId(credentials.email),
+          });
+        console.log(user, "oo");
+        // await clientPromise.then(async (MongoClient) => {
+        //
+        //   user = await MongoClient.db().collection("customers").findOne({
+        //     _id: new ObjectId(credentials.email),
+        //   });
+        //   console.log(user, "oo");
+        // });
+
         const { email, password } = credentials;
         // Fetch user and password hash from your database
         // Example: const user = await getUserByEmail(email)

@@ -12,6 +12,8 @@ import { minH } from "lib/constants";
 import { getCsrfToken } from "next-auth/react";
 import { NextSeo } from "next-seo";
 
+
+
 import NextLink from "next/link";
 export default function SignIn({ csrfToken }) {
   return (
@@ -31,7 +33,7 @@ export default function SignIn({ csrfToken }) {
           <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
           <FormControl>
             <FormLabel>Email</FormLabel>
-            <Input name="username" type="text" />
+            <Input name="email" type="email" />
           </FormControl>
           <FormControl>
             <FormLabel>Password</FormLabel>{" "}
