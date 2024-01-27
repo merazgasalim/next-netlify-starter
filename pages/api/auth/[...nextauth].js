@@ -29,7 +29,7 @@ export const authOptions = {
           .findOne({
             _id: email,
           });
-        console.log(user, "oo");
+    
         // await clientPromise.then(async (MongoClient) => {
         //
         //   user = await MongoClient.db().collection("customers").findOne({
