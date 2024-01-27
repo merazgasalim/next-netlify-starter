@@ -1,4 +1,4 @@
-import { Container, Heading } from "@chakra-ui/react";
+import { Container, Heading, Progress } from "@chakra-ui/react";
 import { minH } from "lib/constants";
 import { NextSeo } from "next-seo";
 
@@ -16,4 +16,10 @@ export default function MyAccount() {
     </Container>
     </>
   );
+}
+
+MyAccount.auth = {
+  role: "customer",
+  loading: <Progress size='xs' isIndeterminate />,
+  unauthorized: "/auth/signin", // redirect to this url
 }

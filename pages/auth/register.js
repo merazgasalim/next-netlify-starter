@@ -40,7 +40,7 @@ export default function Register() {
       ),
     }),
     onSubmit: async (values) => {
-      console.log(values);
+  
       setLoading(true);
       try {
         const res = await fetch("/api/auth/register", {

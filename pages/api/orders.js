@@ -19,7 +19,7 @@ router
   //Retrieve orders
   .post(async (req, res) => {
     const { lastOrderId } = req.body;
-    console.log(lastOrderId);
+  
     try {
       const orders = await req.db
         .collection("orders")

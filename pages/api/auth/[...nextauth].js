@@ -17,19 +17,18 @@ export const authOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-      
         // Add logic to verify credentials here
         if (!credentials) return null;
         const { email, password } = credentials;
 
         const MongoClient = await clientPromise;
-        console.log(credentials);
+       
         const user = await MongoClient.db(process.env.DB_NAME)
           .collection("customers")
           .findOne({
             _id: email,
           });
-    
+
         // await clientPromise.then(async (MongoClient) => {
         //
         //   user = await MongoClient.db().collection("customers").findOne({
@@ -38,7 +37,6 @@ export const authOptions = {
         //   console.log(user, "oo");
         // });
 
-        
         // Fetch user and password hash from your database
         // Example: const user = await getUserByEmail(email)
         if (user && bcrypt.compareSync(password, user.password)) {

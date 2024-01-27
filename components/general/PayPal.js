@@ -103,7 +103,7 @@ const ButtonWrapper = ({ plan,profile, isDisabled }) => {
       })
         .then((res) => res.json())
         .then((res) => {
-          console.log(res);
+          
           if (res.success) {
             //afterSuccess();
           } else {
@@ -150,7 +150,7 @@ export default function PayPal({ isOpen, onClose, plan }) {
     },
     validationSchema: profileFormValidation,
     onSubmit: (values) => {
-      console.log(values);
+   
       //alert(JSON.stringify(values, null, 2));
       //handelUpdateProfile(values);
     },

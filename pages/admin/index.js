@@ -34,6 +34,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   SimpleGrid,
+  Progress,
 } from "@chakra-ui/react";
 
 import { BiDotsVerticalRounded } from "react-icons/bi";
@@ -221,7 +222,7 @@ const Confirmation = ({
   );
 };
 
-export default function Orders() {
+export default function Admin() {
   const toast = useToast();
   const [orders, setOrders] = useState([]);
   //Load More order when the end reached
@@ -412,7 +413,7 @@ const handelUpdateUser = async (
               : action === "Approve"
                 ? "Delivered"
                 : "";
-          console.log(prevState, orderId);
+        
 
           return orders;
         });
@@ -438,3 +439,10 @@ const handelUpdateUser = async (
     setLoading(false);
   }
 };
+
+
+Admin.auth = {
+  role: "admin",
+  loading: <Progress size='xs' isIndeterminate />,
+  unauthorized: "/auth/signin", // redirect to this url
+}

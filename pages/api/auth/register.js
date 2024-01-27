@@ -15,7 +15,7 @@ router
   //register customer
   .post(async (req, res) => {
     const { email, password ,rePassword} = req.body;
-    console.log( email, password ,rePassword)
+  
     try {
       await req.db
         .collection("customers")

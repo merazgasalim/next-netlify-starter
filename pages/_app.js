@@ -1,6 +1,6 @@
 // pages/_app.js
-import { SessionProvider } from "next-auth/react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { SessionProvider, useSession } from "next-auth/react";
+import { ChakraProvider, Progress } from "@chakra-ui/react";
 import { PrismicPreview } from "@prismicio/next";
 import { repositoryName } from "prismicio";
 import theme from "lib/theme";
@@ -11,12 +11,29 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <SessionProvider session={session}>
       <ChakraProvider theme={theme}>
         <Layout>
-          <Component {...pageProps} />
+          {Component.auth ? (
+            <Auth>
+              <Component {...pageProps} />
+            </Auth>
+          ) : (
+            <Component {...pageProps} />
+          )}
         </Layout>
         <PrismicPreview repositoryName={repositoryName} />
       </ChakraProvider>
     </SessionProvider>
   );
+}
+
+function Auth({ children }) {
+  // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
+  const { status } = useSession({ required: true })
+
+  if (status === "loading") {
+    return <Progress size='xs' isIndeterminate />
+  }
+
+  return children
 }
 
 export default MyApp;
