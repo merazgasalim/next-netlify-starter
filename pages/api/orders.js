@@ -2,7 +2,7 @@
 import { createRouter } from "next-connect";
 const checkoutNodeJssdk = require("@paypal/checkout-server-sdk");
 import payPalClient from "lib/payPalClient";
-
+import bcrypt from "bcrypt";
 import database from "middlewares/database";
 import { Offers, Trial } from "lib/constants";
 const { ObjectId } = require("mongodb");
@@ -19,7 +19,7 @@ router
   //Retrieve orders
   .post(async (req, res) => {
     const { lastOrderId } = req.body;
-  
+
     try {
       const orders = await req.db
         .collection("orders")
@@ -38,7 +38,7 @@ router
   //Add order
   .put(async (req, res) => {
     const { paypal } = JSON.parse(req.body);
-    //console.log(paypal.purchase_units);
+    console.log(paypal);
 
     try {
       //PayPal order id
@@ -107,7 +107,35 @@ router
         });
       }
 
-      //4. Send email
+      //4. Create account for customer if it doesn't exist
+      let account;
+      try {
+        account = await req.db.collection("customers").updateOne(
+          {
+            _id: paypal.email,
+          },
+          {
+            $setOnInsert: {
+              _id: paypal.email,
+              name: paypal.name,
+              country: paypal.country,
+              password: bcrypt.hashSync(paypal.password, 8),
+            },
+          },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.log(err);
+      }
+      console.log(account);
+     //{ email already exist
+     //  acknowledged: true,
+     //  modifiedCount: 0,
+     //  upsertedId: null,
+     //  upsertedCount: 0,
+     //  matchedCount: 1
+     //}
+      //5. Send email
       //let doc = await req.db.collection("orders").insertOne(paypal);
       // console.log(doc);
       return res.json({ success: true });

@@ -1,14 +1,12 @@
 import NextAuth from "next-auth";
-import { MongoDBAdapter } from "@auth/mongodb-adapter";
-
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
 import clientPromise from "lib/mongoClient";
-const { ObjectId } = require("mongodb");
+
 
 export const authOptions = {
-  adapter: MongoDBAdapter(clientPromise),
+  //adapter: MongoDBAdapter(clientPromise),
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -21,26 +19,16 @@ export const authOptions = {
         if (!credentials) return null;
         const { email, password } = credentials;
 
+        // Fetch user and password hash from your database
         const MongoClient = await clientPromise;
-       
         const user = await MongoClient.db(process.env.DB_NAME)
           .collection("customers")
           .findOne({
             _id: email,
           });
 
-        // await clientPromise.then(async (MongoClient) => {
-        //
-        //   user = await MongoClient.db().collection("customers").findOne({
-        //     _id: new ObjectId(credentials.email),
-        //   });
-        //   console.log(user, "oo");
-        // });
-
-        // Fetch user and password hash from your database
-        // Example: const user = await getUserByEmail(email)
         if (user && bcrypt.compareSync(password, user.password)) {
-          return { email: user._id };
+          return { email: user._id, name: user.name, image: user.country };
         } else {
           throw new Error("Invalid credentials");
         }
@@ -60,7 +48,8 @@ export const authOptions = {
   pages: {
     signIn: "/auth/signIn", // Custom sign-in page
   },
-  debug: true,
+  trustHost: true,
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 export default NextAuth(authOptions);

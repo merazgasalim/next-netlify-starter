@@ -3,7 +3,7 @@ import { createRouter } from "next-connect";
 import bcrypt from "bcrypt";
 import database from "middlewares/database";
 
-const { ObjectId } = require("mongodb");
+
 
 const router = createRouter();
 

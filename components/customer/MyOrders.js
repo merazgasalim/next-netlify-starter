@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { NextSeo } from "next-seo";
 import {
   Box,
   Heading,
@@ -43,8 +42,6 @@ import { BsInfoLg } from "react-icons/bs";
 import { FaBan } from "react-icons/fa";
 
 import { AiOutlineUserDelete } from "react-icons/ai";
-
-import { minH } from "lib/constants";
 
 const OrderActions = ({ order, setDeletedOrders, setOrders }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -222,7 +219,7 @@ const Confirmation = ({
   );
 };
 
-export default function Admin() {
+export default function MyOrders() {
   const toast = useToast();
   const [orders, setOrders] = useState([]);
   //Load More order when the end reached
@@ -231,7 +228,7 @@ export default function Admin() {
 
   const getNextOrdersPage = useCallback(async () => {
     try {
-      const response = await fetch("/api/orders", {
+      const response = await fetch("/api/customers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -285,90 +282,70 @@ export default function Admin() {
 
   const [deletedOrders, setDeletedOrders] = useState([]);
   return (
-    <>
-      <NextSeo
-        title="Admin Account"
-        description="Admin Account"
-        nofollow
-        noindex
-      />
-      <Box
-        maxW="7xl"
-        mx={"auto"}
-        pt={20}
-        px={{ base: 2, sm: 12, md: 17 }}
-        minH={minH}
-      >
-        <Heading textAlign={"center"} fontSize={"2xl"} fontWeight={"bold"}>
-          Orders
-        </Heading>
-        <Box overflowX={"auto"}>
-          <Table variant="striped" colorScheme="twitter" size={"sm"}>
-            <Thead>
-              <Tr>
-                <Th>Full name</Th>
-                <Th>Email</Th>
-                <Th>Country</Th>
-                <Th>Type</Th>
-                <Th>MAC</Th>
-                <Th>Duration</Th>
-                <Th>Status</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {orders.map((order) => (
-                <Tr
-                  key={order._id}
-                  style={{
-                    textDecoration: deletedOrders.includes(order._id)
-                      ? "line-through"
-                      : "none",
-                  }}
+    <Box mt={5}>
+      <Heading textAlign={"left"} fontSize={"2xl"} fontWeight={"bold"} mb={2} >
+       My Orders
+      </Heading>
+      <Box overflowX={"auto"}>
+        <Table variant="striped" colorScheme="twitter" size={"sm"}>
+          <Thead>
+            <Tr>
+              <Th>Type</Th>
+              <Th>MAC</Th>
+              <Th>Duration</Th>
+              <Th>Status</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {orders.map((order) => (
+              <Tr
+                key={order._id}
+                style={{
+                  textDecoration: deletedOrders.includes(order._id)
+                    ? "line-through"
+                    : "none",
+                }}
+              >
+                <Td>{order.type}</Td>
+                <Td>{order.mac}</Td>
+                <Td>
+                  {order.purchase_units[0].description.replace(
+                    " IPTV Subscription",
+                    ""
+                  )}
+                </Td>
+                <Td
+                  color={
+                    order.stutus === "Pending"
+                      ? "red.500"
+                      : order.stutus === "Delivered"
+                        ? "green.500"
+                        : order.stutus === "Banned"
+                          ? "orange.500"
+                          : "black"
+                  }
                 >
-                  <Td>{order.name}</Td>
-                  <Td>{order.email}</Td>
-                  <Td>{order.country}</Td>
-                  <Td>{order.type}</Td>
-                  <Td>{order.mac}</Td>
-                  <Td>
-                    {order.purchase_units[0].description.replace(
-                      " IPTV Subscription",
-                      ""
-                    )}
-                  </Td>
-                  <Td
-                    color={
-                      order.stutus === "Pending"
-                        ? "red.500"
-                        : order.stutus === "Delivered"
-                          ? "green.500"
-                          : order.stutus === "Banned"
-                            ? "orange.500"
-                            : "black"
-                    }
-                  >
-                    {order.stutus}
-                  </Td>
+                  {order.stutus}
+                </Td>
 
-                  <Td>
-                    <OrderActions
-                      order={order}
-                      setDeletedOrders={setDeletedOrders}
-                      setOrders={setOrders}
-                    />
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </Box>
-        {!observerDisconnected && (
-          <Center m={5} ref={ordersLoaderRef}>
-            <Spinner size={"md"} />
-          </Center>
-        )}
+                <Td>
+                  <OrderActions
+                    order={order}
+                    setDeletedOrders={setDeletedOrders}
+                    setOrders={setOrders}
+                  />
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
       </Box>
-    </>
+      {!observerDisconnected && (
+        <Center m={5} ref={ordersLoaderRef}>
+          <Spinner size={"md"} />
+        </Center>
+      )}
+    </Box>
   );
 }
 
@@ -437,10 +414,4 @@ const handelUpdateUser = async (
   } finally {
     setLoading(false);
   }
-};
-
-Admin.auth = {
-  role: "admin",
-  loading: <Progress size="xs" isIndeterminate />,
-  unauthorized: "/auth/signin", // redirect to this url
 };

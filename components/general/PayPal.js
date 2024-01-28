@@ -17,6 +17,12 @@ import {
   FormErrorMessage,
   Select,
   Divider,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  VStack,
 } from "@chakra-ui/react";
 import {
   PayPalScriptProvider,
@@ -27,8 +33,10 @@ import { TbDownloadOff } from "react-icons/tb";
 import { countryList } from "lib/constants";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { signIn, useSession } from "next-auth/react";
+import { useEffect } from "react";
 
-const ButtonWrapper = ({ plan,profile, isDisabled }) => {
+const ButtonWrapper = ({ plan, profile, isDisabled }) => {
   const toast = useToast();
   const [{ isPending, isResolved, isRejected }] = usePayPalScriptReducer();
 
@@ -93,8 +101,7 @@ const ButtonWrapper = ({ plan,profile, isDisabled }) => {
   const onApprove = (data, actions) => {
     return actions.order.get().then(function (details) {
       const body = {
-        paypal: {...details,...profile},
-        
+        paypal: { ...details, ...profile },
       };
 
       return fetch(`/api/orders`, {
@@ -103,7 +110,6 @@ const ButtonWrapper = ({ plan,profile, isDisabled }) => {
       })
         .then((res) => res.json())
         .then((res) => {
-          
           if (res.success) {
             //afterSuccess();
           } else {
@@ -140,22 +146,52 @@ const ButtonWrapper = ({ plan,profile, isDisabled }) => {
 };
 
 export default function PayPal({ isOpen, onClose, plan }) {
+  const { data: session, status } = useSession();
+
+ 
+
   const formik = useFormik({
     initialValues: {
+      authenticated: false,
       name: process.env.NODE_ENV === "production" ? "" : "Salimo",
-      email: process.env.NODE_ENV === "production" ? "" : "merazgasalim@hotmail.fr",
+      email:
+        process.env.NODE_ENV === "production" ? "" : "merazgasalim@hotmail.fr",
       country: process.env.NODE_ENV === "production" ? "" : "Algeria",
       mac: process.env.NODE_ENV === "production" ? "" : "00:11:22:33:44:55",
       type: process.env.NODE_ENV === "production" ? "" : "M3U",
+      password: "",
+      rePassword: "",
     },
     validationSchema: profileFormValidation,
     onSubmit: (values) => {
-   
+     
       //alert(JSON.stringify(values, null, 2));
       //handelUpdateProfile(values);
     },
   });
- 
+
+  const formikSignin = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: signinFormValidation,
+    onSubmit: (values) => {
+    
+      signIn("credentials", { email: values.email, password: values.password });
+      //alert(JSON.stringify(values, null, 2));
+      //handelUpdateProfile(values);
+    },
+  });
+  //console.log(session, status, formik.values);
+  useEffect(() => {
+    if (status === "authenticated") {
+      formik.setFieldValue("email", session.user.email, true);
+      formik.setFieldValue("name", session.user.name, true);
+      formik.setFieldValue("country", session.user.image, true);
+      formik.setFieldValue("authenticated", true, true);
+    }
+  }, [status]);
   return (
     <Modal
       isOpen={isOpen}
@@ -171,89 +207,191 @@ export default function PayPal({ isOpen, onClose, plan }) {
         <ModalHeader>IP TV Subscription</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <form>
-            <FormControl
-              isInvalid={formik.touched.name && formik.errors.name}
-              isRequired
-            >
-              <FormLabel htmlFor="name"> Full name</FormLabel>
-              <Input
-                id="name"
-                placeholder={"Full Name"}
-                {...formik.getFieldProps("name")}
-              />
-              <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
-            </FormControl>
+          {status === "authenticated" ? (
+            <Text fontWeight={"bold"} textAlign="right" mb={2}>
+              Signed in as {session.user.email}
+            </Text>
+          ) : (
+            <Tabs isFitted variant="enclosed">
+              <TabList mb="1em">
+                <Tab>New customer</Tab>
+                <Tab>Already have an account</Tab>
+              </TabList>
+              <TabPanels>
+                <TabPanel px={0} as="form" onSubmit={formik.handleSubmit}>
+                  <Button type="submit">ok</Button>
+                  <FormControl
+                    isInvalid={formik.touched.name && formik.errors.name}
+                    isRequired
+                  >
+                    <FormLabel htmlFor="name"> Full name</FormLabel>
+                    <Input
+                      id="name"
+                      placeholder={"Full Name"}
+                      {...formik.getFieldProps("name")}
+                    />
+                    <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
+                  </FormControl>
 
-            <FormControl
-              isInvalid={formik.touched.email && formik.errors.email}
-              isRequired
-            >
-              <FormLabel htmlFor="email"> Email</FormLabel>
-              <Input
-                id="email"
-                type={"email"}
-                placeholder={"ex: you@gmail.com"}
-                {...formik.getFieldProps("email")}
-              />
-              <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
-            </FormControl>
+                  <FormControl
+                    isInvalid={formik.touched.email && formik.errors.email}
+                    isRequired
+                  >
+                    <FormLabel htmlFor="email"> Email</FormLabel>
+                    <Input
+                      id="email"
+                      type={"email"}
+                      placeholder={"ex: you@gmail.com"}
+                      {...formik.getFieldProps("email")}
+                    />
+                    <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+                  </FormControl>
 
-            <FormControl
-              isInvalid={formik.touched.country && formik.errors.country}
-              isRequired
-            >
-              <FormLabel htmlFor="country"> Country</FormLabel>
-              <Select
-                id="country"
-                {...formik.getFieldProps("country")}
-                placeholder={"Country"}
-              >
-                {countryList.map((country, index) => (
-                  <option key={index} value={country}>
-                    {country}
-                  </option>
-                ))}
-              </Select>
-              <FormErrorMessage>{formik.errors.country}</FormErrorMessage>
-            </FormControl>
+                  <FormControl
+                    isInvalid={formik.touched.country && formik.errors.country}
+                    isRequired
+                  >
+                    <FormLabel htmlFor="country"> Country</FormLabel>
+                    <Select
+                      id="country"
+                      {...formik.getFieldProps("country")}
+                      placeholder={"Country"}
+                    >
+                      {countryList.map((country, index) => (
+                        <option key={index} value={country}>
+                          {country}
+                        </option>
+                      ))}
+                    </Select>
+                    <FormErrorMessage>{formik.errors.country}</FormErrorMessage>
+                  </FormControl>
+                  <FormControl
+                    isInvalid={
+                      formik.touched.password && formik.errors.password
+                    }
+                    isRequired
+                  >
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <Input
+                      id="password"
+                      type={"password"}
+                      {...formik.getFieldProps("password")}
+                    />
+                    <FormErrorMessage>
+                      {formik.errors.password}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl
+                    isInvalid={
+                      formik.touched.rePassword && formik.errors.rePassword
+                    }
+                    isRequired
+                  >
+                    <FormLabel htmlFor="rePassword">Confirm Password</FormLabel>
+                    <Input
+                      id="rePassword"
+                      type={"password"}
+                      {...formik.getFieldProps("rePassword")}
+                    />
+                    <FormErrorMessage>
+                      {formik.errors.rePassword}
+                    </FormErrorMessage>
+                  </FormControl>
+                </TabPanel>
+                <TabPanel py={0}>
+                  <VStack
+                    as={"form"}
+                    id="sign-in-form"
+                    onSubmit={formikSignin.handleSubmit}
+                    maxW={"md"}
+                    mx="auto"
+                    spacing={5}
+                    justify={"center"}
+                  >
+                    <FormControl
+                      isInvalid={
+                        formikSignin.touched.email && formikSignin.errors.email
+                      }
+                      isRequired
+                    >
+                      <FormLabel htmlFor="signin-email">Email</FormLabel>
+                      <Input
+                        id="signin-email"
+                        type={"email"}
+                        placeholder={"you@example.com"}
+                        {...formikSignin.getFieldProps("email")}
+                      />
+                      <FormErrorMessage>
+                        {formikSignin.errors.email}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl
+                      isInvalid={
+                        formikSignin.touched.password &&
+                        formikSignin.errors.password
+                      }
+                      isRequired
+                    >
+                      <FormLabel htmlFor="signin-password">Password</FormLabel>
+                      <Input
+                        id="signin-password"
+                        type={"password"}
+                        placeholder={"********"}
+                        {...formikSignin.getFieldProps("password")}
+                      />
+                      <FormErrorMessage>
+                        {formikSignin.errors.password}
+                      </FormErrorMessage>
+                    </FormControl>
 
-            <FormControl isInvalid={formik.touched.mac && formik.errors.mac}>
-              <FormLabel htmlFor="mac"> Mac address (Optional) </FormLabel>
-              <Input
-                id="mac"
-                placeholder={"AA.BB.CC.DD.EE.FF"}
-                {...formik.getFieldProps("mac")}
-              />
-              <FormErrorMessage>{formik.errors.mac}</FormErrorMessage>
-            </FormControl>
+                    <HStack justify={"space-between"} w="full">
+                      <Button colorScheme={"blue"} type="submit">
+                        Sign in
+                      </Button>
+                    </HStack>
+                  </VStack>
+                </TabPanel>
+              </TabPanels>
+            </Tabs>
+          )}
 
-            <FormControl
-              isInvalid={formik.touched.type && formik.errors.type}
-              isRequired
-            >
-              <FormLabel htmlFor="type">Device Type</FormLabel>
-              <Select
-                id="type"
-                {...formik.getFieldProps("type")}
-                placeholder={"Type"}
-              >
-                <option value={"Smart TV"}>Smart TV</option>
-                <option value={"M3U"}>M3U</option>
-                <option value={"Enigma"}>Enigma</option>
-              </Select>
-              <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
-            </FormControl>
-          </form>
           <Divider my={5} />
-          <HStack justify={"space-between"} mb={5} fontWeight="bold" >
+          <FormControl
+            isInvalid={formik.touched.type && formik.errors.type}
+            isRequired
+          >
+            <FormLabel htmlFor="type">Device Type</FormLabel>
+            <Select
+              id="type"
+              {...formik.getFieldProps("type")}
+              placeholder={"Type"}
+            >
+              <option value={"Smart TV"}>Smart TV</option>
+              <option value={"M3U"}>M3U</option>
+              <option value={"Enigma"}>Enigma</option>
+            </Select>
+            <FormErrorMessage>{formik.errors.type}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={formik.touched.mac && formik.errors.mac}>
+            <FormLabel htmlFor="mac"> Mac address (Optional) </FormLabel>
+            <Input
+              id="mac"
+              placeholder={"AA.BB.CC.DD.EE.FF"}
+              {...formik.getFieldProps("mac")}
+            />
+            <FormErrorMessage>{formik.errors.mac}</FormErrorMessage>
+          </FormControl>
+
+          <Divider my={5} />
+          <HStack justify={"space-between"} mb={5} fontWeight="bold">
             <Text>{plan?.duration} subscription. </Text>
             <Text>${plan?.price}</Text>
           </HStack>
           <PayPalScriptProvider
             options={{
               //clientId: "test",
-              clientId:process.env.PayPal_ClientID,
+              clientId: process.env.PayPal_ClientID,
               components: "buttons",
               currency: "USD",
               intent: "capture",
@@ -277,6 +415,7 @@ export default function PayPal({ isOpen, onClose, plan }) {
 }
 
 const profileFormValidation = Yup.object({
+  authenticated: Yup.boolean(),
   name: Yup.string().min(4).max(100).required(),
   email: Yup.string().email().required(),
   country: Yup.string().required(),
@@ -291,4 +430,27 @@ const profileFormValidation = Yup.object({
       }
     ),
   type: Yup.string().required(),
+  //status === "authenticated"
+  password: Yup.string().when("authenticated", ([authenticated], schema) => {
+    return authenticated
+      ? schema.nullable().notRequired()
+      : schema
+          .required("Password is required")
+          .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+            "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
+          );
+  }),
+
+  rePassword: Yup.string()
+    //.oneOf([Yup.ref("password"), null], "Passwords must match")
+    .when("authenticated", ([authenticated], schema) => {
+      return authenticated
+        ? schema.nullable().notRequired()
+        : schema.oneOf([Yup.ref("password"), null], "Passwords must match");
+    }),
+});
+const signinFormValidation = Yup.object({
+  email: Yup.string().email().required(),
+  password: Yup.string().required(),
 });
