@@ -3,7 +3,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
 import clientPromise from "lib/mongoClient";
+import { transporter } from "lib/nodemailer";
 
+import welcomeEmail from "lib/welcomeEmail";
 
 export const authOptions = {
   //adapter: MongoDBAdapter(clientPromise),
@@ -47,6 +49,7 @@ export const authOptions = {
   },
   pages: {
     signIn: "/auth/signIn", // Custom sign-in page
+    error: '/auth/error'
   },
   trustHost: true,
   secret: process.env.NEXTAUTH_SECRET,

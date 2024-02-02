@@ -8,7 +8,7 @@ export default function RefundPolicy() {
     <NextSeo title="Calcelation Policy" description="Calcelation Policy" />
     <Container as={"main"} maxW="6xl" pt={20} minH={minH}>
       <Heading as={"h1"} mb={5}>
-        Calcelation Policy
+        Cancelation Policy
       </Heading>
       <Text fontSize={"lg"} mb={2} fontWeight="bold">
         How can I cancel an order?

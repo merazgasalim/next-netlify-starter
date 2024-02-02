@@ -6,28 +6,38 @@ import {
   FormLabel,
   Input,
   Link,
+  Progress,
+  Select,
   useToast,
   VStack,
 } from "@chakra-ui/react";
-import { minH } from "lib/constants";
+import { countryList, minH } from "lib/constants";
 import { NextSeo } from "next-seo";
 import NextLink from "next/link";
 
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useState } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 export default function Register() {
   const toast = useToast();
+  const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
+      name: "",
       email: "",
+      country: "",
       password: "",
       rePassword: "",
     },
     validationSchema: Yup.object({
+      name: Yup.string().min(4).max(100).required("Full name is required"),
       email: Yup.string().email().required("Email is required"),
+      country: Yup.string().required("Country is required"),
       password: Yup.string()
         .required("Password is required")
         .matches(
@@ -40,7 +50,6 @@ export default function Register() {
       ),
     }),
     onSubmit: async (values) => {
-  
       setLoading(true);
       try {
         const res = await fetch("/api/auth/register", {
@@ -55,13 +64,24 @@ export default function Register() {
             status: "success",
             duration: 9000,
             isClosable: true,
+            position: "top-right",
+            variant: "left-accent",
           });
+          // if ((process.env.NODE_ENV = "production"))
+          await signIn("credentials", {
+            email: values.email,
+            password: values.password,
+            redirect: false,
+          });
+          router.push("/");
         } else {
           toast({
             description: answer.reason,
             status: "error",
             duration: 9000,
             isClosable: true,
+            position: "top-right",
+            variant: "left-accent",
           });
         }
       } catch (err) {
@@ -70,6 +90,8 @@ export default function Register() {
           status: "error",
           duration: 9000,
           isClosable: true,
+          position: "top-right",
+          variant: "left-accent",
         });
         console.log(err);
       } finally {
@@ -77,6 +99,7 @@ export default function Register() {
       }
     },
   });
+
   return (
     <>
       <NextSeo title="Register" description="Register" nofollow noindex />
@@ -90,6 +113,19 @@ export default function Register() {
           justify={"center"}
           onSubmit={formik.handleSubmit}
         >
+          {" "}
+          <FormControl
+            isInvalid={formik.touched.name && formik.errors.name}
+            isRequired
+          >
+            <FormLabel htmlFor="name"> Full name</FormLabel>
+            <Input
+              id="name"
+              placeholder={"Full Name"}
+              {...formik.getFieldProps("name")}
+            />
+            <FormErrorMessage>{formik.errors.name}</FormErrorMessage>
+          </FormControl>
           <FormControl
             isInvalid={formik.touched.email && formik.errors.email}
             isRequired
@@ -102,6 +138,24 @@ export default function Register() {
               {...formik.getFieldProps("email")}
             />
             <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
+          </FormControl>
+          <FormControl
+            isInvalid={formik.touched.country && formik.errors.country}
+            isRequired
+          >
+            <FormLabel htmlFor="country"> Country</FormLabel>
+            <Select
+              id="country"
+              {...formik.getFieldProps("country")}
+              placeholder={"Country"}
+            >
+              {countryList.map((country, index) => (
+                <option key={index} value={country}>
+                  {country}
+                </option>
+              ))}
+            </Select>
+            <FormErrorMessage>{formik.errors.country}</FormErrorMessage>
           </FormControl>
           <FormControl
             isInvalid={formik.touched.password && formik.errors.password}
@@ -127,11 +181,9 @@ export default function Register() {
             />
             <FormErrorMessage>{formik.errors.rePassword}</FormErrorMessage>
           </FormControl>
-
-          <Button type="submit" colorScheme={"blue"}>
+          <Button type="submit" colorScheme={"blue"} isLoading={loading}>
             Register
           </Button>
-
           <Link as={NextLink} href="/auth/signIn" color="teal">
             Already have an account? Sign in
           </Link>

@@ -22,8 +22,10 @@ import {
   TabPanels,
   Tab,
   TabPanel,
-  VStack,
+  Checkbox,
+  Link,
 } from "@chakra-ui/react";
+import SigninForm from "./SigninForm";
 import {
   PayPalScriptProvider,
   PayPalButtons,
@@ -33,8 +35,9 @@ import { TbDownloadOff } from "react-icons/tb";
 import { countryList } from "lib/constants";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { signIn, useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 
 const ButtonWrapper = ({ plan, profile, isDisabled }) => {
   const toast = useToast();
@@ -148,8 +151,6 @@ const ButtonWrapper = ({ plan, profile, isDisabled }) => {
 export default function PayPal({ isOpen, onClose, plan }) {
   const { data: session, status } = useSession();
 
- 
-
   const formik = useFormik({
     initialValues: {
       authenticated: false,
@@ -161,29 +162,13 @@ export default function PayPal({ isOpen, onClose, plan }) {
       type: process.env.NODE_ENV === "production" ? "" : "M3U",
       password: "",
       rePassword: "",
+      acceptTerms: false,
+      acceptPrivacy: false,
     },
     validationSchema: profileFormValidation,
-    onSubmit: (values) => {
-     
-      //alert(JSON.stringify(values, null, 2));
-      //handelUpdateProfile(values);
-    },
+    onSubmit: (values) => {},
   });
 
-  const formikSignin = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: signinFormValidation,
-    onSubmit: (values) => {
-    
-      signIn("credentials", { email: values.email, password: values.password });
-      //alert(JSON.stringify(values, null, 2));
-      //handelUpdateProfile(values);
-    },
-  });
-  //console.log(session, status, formik.values);
   useEffect(() => {
     if (status === "authenticated") {
       formik.setFieldValue("email", session.user.email, true);
@@ -192,6 +177,12 @@ export default function PayPal({ isOpen, onClose, plan }) {
       formik.setFieldValue("authenticated", true, true);
     }
   }, [status]);
+
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const handleTabsChange = (index) => {
+    setTabIndex(index);
+  };
   return (
     <Modal
       isOpen={isOpen}
@@ -212,14 +203,18 @@ export default function PayPal({ isOpen, onClose, plan }) {
               Signed in as {session.user.email}
             </Text>
           ) : (
-            <Tabs isFitted variant="enclosed">
+            <Tabs
+              isFitted
+              variant="enclosed"
+              index={tabIndex}
+              onChange={handleTabsChange}
+            >
               <TabList mb="1em">
                 <Tab>New customer</Tab>
                 <Tab>Already have an account</Tab>
               </TabList>
               <TabPanels>
-                <TabPanel px={0} as="form" onSubmit={formik.handleSubmit}>
-                  <Button type="submit">ok</Button>
+                <TabPanel px={0}>
                   <FormControl
                     isInvalid={formik.touched.name && formik.errors.name}
                     isRequired
@@ -299,57 +294,7 @@ export default function PayPal({ isOpen, onClose, plan }) {
                   </FormControl>
                 </TabPanel>
                 <TabPanel py={0}>
-                  <VStack
-                    as={"form"}
-                    id="sign-in-form"
-                    onSubmit={formikSignin.handleSubmit}
-                    maxW={"md"}
-                    mx="auto"
-                    spacing={5}
-                    justify={"center"}
-                  >
-                    <FormControl
-                      isInvalid={
-                        formikSignin.touched.email && formikSignin.errors.email
-                      }
-                      isRequired
-                    >
-                      <FormLabel htmlFor="signin-email">Email</FormLabel>
-                      <Input
-                        id="signin-email"
-                        type={"email"}
-                        placeholder={"you@example.com"}
-                        {...formikSignin.getFieldProps("email")}
-                      />
-                      <FormErrorMessage>
-                        {formikSignin.errors.email}
-                      </FormErrorMessage>
-                    </FormControl>
-                    <FormControl
-                      isInvalid={
-                        formikSignin.touched.password &&
-                        formikSignin.errors.password
-                      }
-                      isRequired
-                    >
-                      <FormLabel htmlFor="signin-password">Password</FormLabel>
-                      <Input
-                        id="signin-password"
-                        type={"password"}
-                        placeholder={"********"}
-                        {...formikSignin.getFieldProps("password")}
-                      />
-                      <FormErrorMessage>
-                        {formikSignin.errors.password}
-                      </FormErrorMessage>
-                    </FormControl>
-
-                    <HStack justify={"space-between"} w="full">
-                      <Button colorScheme={"blue"} type="submit">
-                        Sign in
-                      </Button>
-                    </HStack>
-                  </VStack>
+                  <SigninForm registerFn={setTabIndex} />
                 </TabPanel>
               </TabPanels>
             </Tabs>
@@ -384,10 +329,56 @@ export default function PayPal({ isOpen, onClose, plan }) {
           </FormControl>
 
           <Divider my={5} />
-          <HStack justify={"space-between"} mb={5} fontWeight="bold">
+          <HStack justify={"space-between"} mb={2} fontWeight="bold">
             <Text>{plan?.duration} subscription. </Text>
             <Text>${plan?.price}</Text>
           </HStack>
+
+          <FormControl
+            isRequired
+            isInvalid={formik.touched.acceptTerms && formik.errors.acceptTerms}
+          >
+            <HStack>
+              <Checkbox
+                id="acceptTerms"
+                name="acceptTerms"
+                colorScheme="green"
+                isChecked={formik.values.acceptTerms}
+                onChange={formik.handleChange}
+              />
+              <Link href="/legal/terms-of-service" isExternal color="teal">
+                I have read and agree the terms of service
+                <ExternalLinkIcon mx="2px" />
+              </Link>
+            </HStack>
+            <FormErrorMessage>{formik.errors.acceptTerms}</FormErrorMessage>
+          </FormControl>
+
+          <FormControl
+            isRequired
+            isInvalid={
+              formik.touched.acceptPrivacy && formik.errors.acceptPrivacy
+            }
+            mb={5}
+          >
+            <HStack>
+              <Checkbox
+                id="acceptPrivacy"
+                name="acceptPrivacy"
+                colorScheme="green"
+                isChecked={formik.values.acceptPrivacy}
+                onChange={formik.handleChange}
+              />
+              <Link href="/legal/privacy-policy" isExternal color="teal">
+                I have read and agree the privacy policy
+                <ExternalLinkIcon mx="2px" />
+              </Link>
+            </HStack>
+            <FormErrorMessage>
+              {formik.errors.acceptPrivacy && formik.errors.acceptPrivacy}
+            </FormErrorMessage>
+          </FormControl>
+
           <PayPalScriptProvider
             options={{
               //clientId: "test",
@@ -449,8 +440,10 @@ const profileFormValidation = Yup.object({
         ? schema.nullable().notRequired()
         : schema.oneOf([Yup.ref("password"), null], "Passwords must match");
     }),
-});
-const signinFormValidation = Yup.object({
-  email: Yup.string().email().required(),
-  password: Yup.string().required(),
+  acceptTerms: Yup.bool()
+    .oneOf([true], "You must accept the terms and conditions")
+    .required(),
+  acceptPrivacy: Yup.bool()
+    .oneOf([true], "You must accept the privacy of policy")
+    .required(),
 });

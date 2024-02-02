@@ -5,6 +5,8 @@ import payPalClient from "lib/payPalClient";
 import bcrypt from "bcrypt";
 import database from "middlewares/database";
 import { Offers, Trial } from "lib/constants";
+import { transporter } from "lib/nodemailer";
+import welcomeEmail from "lib/welcomeEmail";
 const { ObjectId } = require("mongodb");
 
 const router = createRouter();
@@ -127,17 +129,40 @@ router
       } catch (err) {
         console.log(err);
       }
-      console.log(account);
-     //{ email already exist
-     //  acknowledged: true,
-     //  modifiedCount: 0,
-     //  upsertedId: null,
-     //  upsertedCount: 0,
-     //  matchedCount: 1
-     //}
+
       //5. Send email
-      //let doc = await req.db.collection("orders").insertOne(paypal);
-      // console.log(doc);
+
+      if (process.env.NODE_ENV === "production") {
+        try {
+          //Send Welcome Email for new user
+          if (account.upsertedId) {
+            await transporter.sendMail({
+              from: "no-reply@tvstreams.net",
+              to: message.user.email,
+              subject: "Welcome to TVSTREAMS",
+              html: welcomeEmail(message.user.name ?? "incoliver!"),
+            });
+          } else {
+            // Send reminder of existing account
+            await transporter.sendMail({
+              from: "no-reply@tvstreams.net",
+              to: message.user.email,
+              subject: "Welcome to TVSTREAMS",
+              html: welcomeEmail(message.user.name ?? "incoliver!"),
+            });
+          }
+
+          //Send order confirmail email
+          await transporter.sendMail({
+            from: "no-reply@tvstreams.net",
+            to: message.user.email,
+            subject: "Welcome to TVSTREAMS",
+            html: welcomeEmail(message.user.name ?? "incoliver!"),
+          });
+        } catch (err) {
+          console.log(err);
+        }
+      }
       return res.json({ success: true });
     } catch (err) {
       console.log(err);
