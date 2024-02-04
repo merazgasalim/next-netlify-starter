@@ -14,10 +14,10 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
-
-import NextLink from "next/link";
+import { useRouter } from "next/router";
 
 export default function SigninForm({ registerFn }) {
+  const router = useRouter();
   const toast = useToast();
   const [loader, setLoader] = useState(false);
   const formikSignin = useFormik({
@@ -34,7 +34,7 @@ export default function SigninForm({ registerFn }) {
           password: values.password,
           redirect: false,
         });
-        
+
         if (!res.ok) {
           toast({
             description: res.error,
@@ -113,9 +113,17 @@ export default function SigninForm({ registerFn }) {
         <Button colorScheme={"blue"} type="submit" isLoading={loader}>
           Sign in
         </Button>
-        <Link onClick={()=>registerFn(0)} color="teal">
-          Not register? Register.
-        </Link>
+        <VStack>
+          <Link onClick={() => registerFn(0)} color="teal">
+            Not registered? Register.
+          </Link>
+          <Link
+            onClick={() => router.push("/auth/reset-password")}
+            color="teal"
+          >
+            Forgot password? Reset.
+          </Link>
+        </VStack>
       </HStack>
     </VStack>
   );

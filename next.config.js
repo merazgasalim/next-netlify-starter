@@ -6,7 +6,7 @@ const moduleExports = {
   env: {
     baseURL:
       process.env.NODE_ENV === "production"
-        ? `https://www.incolive.com`
+        ? `https://tvstreams.net`
         : "http://localhost:3000",
 
     PayPal_ClientID:

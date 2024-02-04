@@ -23,7 +23,7 @@ export default function SignIn({ csrfToken }) {
   return (
     <>
       <NextSeo title="Sign In" description="Sign In" nofollow noindex />
-      <Container as={"main"} maxW="6xl" pt={20} minH={minH}>
+      <Container as={"main"} maxW="6xl" pt={20} minH={minH}  >
         <SigninForm registerFn={goRegisterPage} />
         {/*  <VStack
           as={"form"}

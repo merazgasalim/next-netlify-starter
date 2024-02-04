@@ -7,14 +7,22 @@ import {
   useColorModeValue,
   Stack,
   useOutsideClick,
+  ButtonGroup,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuOptionGroup,
 } from "@chakra-ui/react";
 import { Link } from "@chakra-ui/next-js";
 import Image from "next/image";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
-import { useRef, useState } from "react";
-import Login from "./Login";
+import { IoMdMore } from "react-icons/io";
+import { useRef } from "react";
 
 import Logo from "public/logo.png";
+import { useRouter } from "next/router";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 const Links = [
   { name: "Home", url: "/" },
@@ -44,9 +52,10 @@ const NavLink = (props) => {
 };
 
 export default function Nav() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const ref = useRef();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   useOutsideClick({
     ref: ref,
     handler: () => onClose(),
@@ -85,22 +94,40 @@ export default function Nav() {
               {link.name}
             </NavLink>
           ))}
-          <Login/>
         </HStack>
-        <Button
-          as={Link}
-          href="/my-account"
-          variant={"outline"}
-          _hover={{
-            textDecoration: "none",
-            bg:"#8A56C2",
-            color:"white"
-          }}
+        <ButtonGroup
           size={{ base: "sm", md: "md" }}
-          borderColor="#8A56C2"
+          isAttached
+          variant="outline"
         >
-          Client Area
-        </Button>
+          <Button colorScheme="blue" onClick={() => router.push("/my-account")}>
+            Client Area
+          </Button>
+
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="More options"
+              icon={<IoMdMore />}
+              colorScheme="blue"
+            />
+            <MenuList>
+              <MenuOptionGroup
+                title={
+                  session
+                    ? `Signed in as ${session.user.email}`
+                    : `Not signed in`
+                }
+              >
+                {session ? (
+                  <MenuItem onClick={() => signOut()}>Sign out</MenuItem>
+                ) : (
+                  <MenuItem onClick={() => signIn()}>Sign in</MenuItem>
+                )}
+              </MenuOptionGroup>
+            </MenuList>
+          </Menu>
+        </ButtonGroup>
       </HStack>
 
       {isOpen ? (
