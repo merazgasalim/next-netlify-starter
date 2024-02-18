@@ -1,3 +1,10 @@
+/*
+Domain
+Username
+Password
+url http://rear99292.cdngold.me/get.php?username=salim&password=d573e079cd&type=m3u_plus&output=ts
+expire time
+*/
 import { useState, useEffect, useCallback, useRef } from "react";
 import { NextSeo } from "next-seo";
 import {
@@ -35,8 +42,16 @@ import {
   AlertDialogOverlay,
   SimpleGrid,
   Progress,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Input,
+  Link,
+  Select,
+  VStack,
 } from "@chakra-ui/react";
-
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { FcApprove } from "react-icons/fc";
 import { BsInfoLg } from "react-icons/bs";
@@ -45,6 +60,7 @@ import { FaBan } from "react-icons/fa";
 import { AiOutlineUserDelete } from "react-icons/ai";
 
 import { minH } from "lib/constants";
+import { SubscriptionSchema } from "lib/validators";
 
 const OrderActions = ({ order, setDeletedOrders, setOrders }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -172,6 +188,19 @@ const Confirmation = ({
   //Approve, Ban or delete user
   const [loading, setLoading] = useState(false);
 
+  //Account form
+  const formik = useFormik({
+    initialValues: {
+      Username: "",
+      Password: "",
+      url: "",
+    },
+    validationSchema: SubscriptionSchema,
+    onSubmit: async (values) => {
+      console.log(values);
+    },
+  });
+
   return (
     <AlertDialog
       isOpen={isOpen}
@@ -186,7 +215,59 @@ const Confirmation = ({
             {dialogInfo.title}
           </AlertDialogHeader>
 
-          <AlertDialogBody>{dialogInfo.message}</AlertDialogBody>
+          <AlertDialogBody>
+            {dialogInfo.message}
+            {dialogInfo.actionName === "Approve" && (
+              <VStack
+                as={"form"}
+                spacing={5}
+                justify={"center"}
+                onSubmit={formik.handleSubmit}
+              >
+                <FormControl
+                  isInvalid={formik.touched.Username && formik.errors.Username}
+                  isRequired
+                >
+                  <FormLabel htmlFor="Username">Username</FormLabel>
+                  <Input
+                    id="Username"
+                    placeholder={"Username"}
+                    {...formik.getFieldProps("Username")}
+                  />
+                  <FormErrorMessage>{formik.errors.Username}</FormErrorMessage>
+                </FormControl>
+
+                <FormControl
+                  isInvalid={formik.touched.Password && formik.errors.Password}
+                  isRequired
+                >
+                  <FormLabel htmlFor="Password">Password</FormLabel>
+                  <Input
+                    id="Password"
+                    placeholder={"Password"}
+                    {...formik.getFieldProps("Password")}
+                  />
+                  <FormErrorMessage>{formik.errors.Password}</FormErrorMessage>
+                </FormControl>
+
+                <FormControl
+                  isInvalid={formik.touched.url && formik.errors.url}
+                  isRequired
+                >
+                  <FormLabel htmlFor="url"> Url</FormLabel>
+                  <Input
+                    type={"url"}
+                    id="url"
+                    placeholder={
+                      "http://tree38620.cdngold.me/get.php?username=fd52d5bfe0&password=4503a0841c&type=m3u_plus&output=ts"
+                    }
+                    {...formik.getFieldProps("url")}
+                  />
+                  <FormErrorMessage>{formik.errors.url}</FormErrorMessage>
+                </FormControl>
+              </VStack>
+            )}
+          </AlertDialogBody>
 
           <AlertDialogFooter>
             <Button
@@ -209,8 +290,15 @@ const Confirmation = ({
                   toast,
                   setDeletedOrders,
                   setIsOpen,
-                  setOrders
+                  setOrders,
+                  formik.values
                 )
+              }
+              isDisabled={
+                !SubscriptionSchema.isValidSync(formik.values) &&
+                dialogInfo.actionName === "Approve"
+                  ? true
+                  : false
               }
             >
               {dialogInfo.actionName}
@@ -379,7 +467,8 @@ const handelUpdateUser = async (
   toast,
   setDeletedOrders,
   setIsOpen,
-  setOrders
+  setOrders,
+  subscriptionDetails = null
 ) => {
   setLoading(true);
   try {
@@ -389,6 +478,7 @@ const handelUpdateUser = async (
       body: JSON.stringify({
         orderId,
         action,
+        subscriptionDetails
       }),
     });
     const answer = await res.json();

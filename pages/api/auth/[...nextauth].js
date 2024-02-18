@@ -3,9 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 
 import clientPromise from "lib/mongoClient";
-import { transporter } from "lib/nodemailer";
 
-import welcomeEmail from "lib/welcomeEmail";
 
 export const authOptions = {
   //adapter: MongoDBAdapter(clientPromise),
@@ -39,7 +37,7 @@ export const authOptions = {
   ],
   session: {
     strategy: "jwt",
-    maxAge: 1 * 24 * 60 * 60, // 1 day
+    maxAge: 1 * 24 * 60 * 60 * 30 * 6, // 6 months
   },
   jwt: {
     // JWT encoding and decoding configurations
@@ -49,7 +47,7 @@ export const authOptions = {
   },
   pages: {
     signIn: "/auth/signIn", // Custom sign-in page
-    error: '/auth/error'
+    error: "/auth/error",
   },
   trustHost: true,
   secret: process.env.NEXTAUTH_SECRET,

@@ -13,14 +13,14 @@ import { minH } from "lib/constants";
 import { NextSeo } from "next-seo";
 import { useFormik } from "formik";
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { ResetPasswordSchema, SetNewPasswordSchema } from "lib/validators";
+import { RiseLoader } from "react-spinners";
 
 export default function ResetPassword() {
   const toast = useToast();
   const router = useRouter();
-  console.log(router);
+
   const [loading, setLoading] = useState(false);
   const formik = useFormik({
     initialValues: {
@@ -41,6 +41,7 @@ export default function ResetPassword() {
             position: "top-right",
             variant: "left-accent",
           });
+          router.push("/");
         } else {
           toast({
             description: answer.reason,
@@ -100,7 +101,12 @@ export default function ResetPassword() {
               <FormErrorMessage>{formik.errors.email}</FormErrorMessage>
             </FormControl>
 
-            <Button type="submit" colorScheme={"blue"} isLoading={loading}>
+            <Button
+              type="submit"
+              colorScheme={"blue"}
+              isLoading={loading}
+              spinner={<RiseLoader size={8} color="white" />}
+            >
               Reset Password
             </Button>
           </VStack>
@@ -145,6 +151,14 @@ const SetNewPassword = () => {
             position: "top-right",
             variant: "left-accent",
           });
+
+          const res = await signIn("credentials", {
+            email: router.query.email,
+            password: values.rePassword,
+            redirect: false,
+          });
+          console.log(res)
+          router.push(res.url)
         } else {
           toast({
             description: answer.reason,
@@ -208,10 +222,16 @@ const SetNewPassword = () => {
           <FormErrorMessage>{formik.errors.rePassword}</FormErrorMessage>
         </FormControl>
 
-        <Button type="submit" colorScheme={"blue"} isLoading={loading}>
+        <Button
+          type="submit"
+          colorScheme={"blue"}
+          isLoading={loading}
+          spinner={<RiseLoader size={8} color="white" />}
+        >
           Reset Password
         </Button>
       </VStack>
     </>
   );
 };
+

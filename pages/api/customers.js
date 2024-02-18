@@ -2,7 +2,8 @@
 import { createRouter } from "next-connect";
 import database from "middlewares/database";
 
-const { ObjectId } = require("mongodb");
+//const { ObjectId } = require("mongodb");
+import { ObjectId } from "mongodb";
 
 const router = createRouter();
 
@@ -14,12 +15,11 @@ router
     await database(req, res, next);
     await next();
   })
-  //Retrieve orders
+  //Retrieve customer orders
   .post(async (req, res) => {
     const session = await getServerSession(req, res, authOptions);
 
-    console.log(session.user.email);
-    if (session) {
+   if (session) {
       const { lastOrderId } = req.body;
 
       try {

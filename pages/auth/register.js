@@ -18,8 +18,9 @@ import NextLink from "next/link";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useState } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import { RiseLoader } from "react-spinners";
 
 export default function Register() {
   const toast = useToast();
@@ -181,7 +182,12 @@ export default function Register() {
             />
             <FormErrorMessage>{formik.errors.rePassword}</FormErrorMessage>
           </FormControl>
-          <Button type="submit" colorScheme={"blue"} isLoading={loading}>
+          <Button
+            type="submit"
+            colorScheme={"blue"}
+            isLoading={loading}
+            spinner={<RiseLoader size={8} color="white" />}
+          >
             Register
           </Button>
           <Link as={NextLink} href="/auth/signIn" color="teal">
@@ -192,3 +198,4 @@ export default function Register() {
     </>
   );
 }
+

@@ -6,8 +6,8 @@ import { NextSeo } from "next-seo";
 import MyOrders from "@components/customer/MyOrders";
 
 export default function MyAccount() {
-  const { data: session, status } = useSession();
-  console.log(session);
+  const { data: session } = useSession();
+
   return (
     <>
       <NextSeo title="My Account" description="My Account" nofollow noindex />

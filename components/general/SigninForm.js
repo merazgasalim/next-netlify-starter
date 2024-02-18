@@ -15,8 +15,9 @@ import { useFormik } from "formik";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { RiseLoader } from "react-spinners";
 
-export default function SigninForm({ registerFn }) {
+export default function SigninForm({ registerFn, returnCallbackUrl = false }) {
   const router = useRouter();
   const toast = useToast();
   const [loader, setLoader] = useState(false);
@@ -53,6 +54,8 @@ export default function SigninForm({ registerFn }) {
             position: "top-right",
             variant: "left-accent",
           });
+          console.log(router?.query?.callbackUrl);
+          if (returnCallbackUrl) router.push(router?.query?.callbackUrl);
         }
       } catch (err) {
         toast({
@@ -110,7 +113,12 @@ export default function SigninForm({ registerFn }) {
       </FormControl>
 
       <HStack justify={"space-between"} w="full">
-        <Button colorScheme={"blue"} type="submit" isLoading={loader}>
+        <Button
+          colorScheme={"blue"}
+          type="submit"
+          isLoading={loader}
+          spinner={<RiseLoader size={8} color="white" />}
+        >
           Sign in
         </Button>
         <VStack>

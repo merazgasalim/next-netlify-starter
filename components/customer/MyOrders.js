@@ -26,24 +26,16 @@ import {
   Button,
   Text,
   useDisclosure,
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
   SimpleGrid,
-  Progress,
+  Tooltip,
+  Icon,
 } from "@chakra-ui/react";
 
 import { BiDotsVerticalRounded } from "react-icons/bi";
-import { FcApprove } from "react-icons/fc";
+import { BsInfoCircleFill } from "react-icons/bs";
 import { BsInfoLg } from "react-icons/bs";
-import { FaBan } from "react-icons/fa";
 
-import { AiOutlineUserDelete } from "react-icons/ai";
-
-const OrderActions = ({ order, setDeletedOrders, setOrders }) => {
+const OrderActions = ({ order }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   //Dialag confirmation
   const [isOpenDialog, setIsOpenDialog] = useState(false);
@@ -64,49 +56,7 @@ const OrderActions = ({ order, setDeletedOrders, setOrders }) => {
         variant="outline"
       />
       <MenuList>
-        <MenuItem
-          color="green"
-          icon={<FcApprove />}
-          onClick={() =>
-            setDialogInfo({
-              orderId: order._id,
-              title: "Approve Customer",
-              message: "Are you sure? This order will be marked as delivred.",
-              actionName: "Approve",
-            })
-          }
-        >
-          Approve
-        </MenuItem>
-        <MenuItem
-          color="orange"
-          icon={<FaBan />}
-          onClick={() =>
-            setDialogInfo({
-              orderId: order._id,
-              title: "Ban Customer",
-              message: "Are you sure? This order will be marked as banned.",
-              actionName: "Ban",
-            })
-          }
-        >
-          Ban
-        </MenuItem>
-        <MenuItem
-          color="red"
-          icon={<AiOutlineUserDelete />}
-          onClick={() =>
-            setDialogInfo({
-              orderId: order._id,
-              title: "Delete Customer",
-              message: "Are you sure? You can't undo this action afterwards.",
-              actionName: "Delete",
-            })
-          }
-        >
-          Delete
-        </MenuItem>
-        <MenuItem color="blue" icon={<BsInfoLg />} onClick={onOpen}>
+        <MenuItem color="blue.500" icon={<BsInfoLg />} onClick={onOpen}>
           Full info
         </MenuItem>
       </MenuList>
@@ -143,79 +93,7 @@ const OrderActions = ({ order, setDeletedOrders, setOrders }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-      {dialogInfo && (
-        <Confirmation
-          isOpen={isOpenDialog}
-          setIsOpen={setIsOpenDialog}
-          dialogInfo={dialogInfo}
-          setDeletedOrders={setDeletedOrders}
-          setOrders={setOrders}
-        />
-      )}
     </Menu>
-  );
-};
-
-//Ban Approve Delete Confirmation Dialogue
-const Confirmation = ({
-  isOpen,
-  setIsOpen,
-  dialogInfo,
-  setDeletedOrders,
-  setOrders,
-}) => {
-  const cancelRef = useRef();
-  const toast = useToast();
-  //Approve, Ban or delete user
-  const [loading, setLoading] = useState(false);
-
-  return (
-    <AlertDialog
-      isOpen={isOpen}
-      leastDestructiveRef={cancelRef}
-      onClose={() => {
-        setIsOpen(false);
-      }}
-    >
-      <AlertDialogOverlay>
-        <AlertDialogContent>
-          <AlertDialogHeader fontSize="lg" fontWeight="bold">
-            {dialogInfo.title}
-          </AlertDialogHeader>
-
-          <AlertDialogBody>{dialogInfo.message}</AlertDialogBody>
-
-          <AlertDialogFooter>
-            <Button
-              ref={cancelRef}
-              onClick={() => {
-                setIsOpen(false);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              isLoading={loading}
-              colorScheme="red"
-              ml={3}
-              onClick={() =>
-                handelUpdateUser(
-                  dialogInfo.orderId,
-                  dialogInfo.actionName,
-                  setLoading,
-                  toast,
-                  setDeletedOrders,
-                  setIsOpen,
-                  setOrders
-                )
-              }
-            >
-              {dialogInfo.actionName}
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialogOverlay>
-    </AlertDialog>
   );
 };
 
@@ -283,8 +161,8 @@ export default function MyOrders() {
   const [deletedOrders, setDeletedOrders] = useState([]);
   return (
     <Box mt={5}>
-      <Heading textAlign={"left"} fontSize={"2xl"} fontWeight={"bold"} mb={2} >
-       My Orders
+      <Heading textAlign={"left"} fontSize={"2xl"} fontWeight={"bold"} mb={2}>
+        My Orders
       </Heading>
       <Box overflowX={"auto"}>
         <Table variant="striped" colorScheme="twitter" size={"sm"}>
@@ -317,23 +195,29 @@ export default function MyOrders() {
                 <Td
                   color={
                     order.stutus === "Pending"
-                      ? "red.500"
+                      ? "orange.500"
                       : order.stutus === "Delivered"
                         ? "green.500"
                         : order.stutus === "Banned"
-                          ? "orange.500"
+                          ? "red.500"
                           : "black"
                   }
                 >
-                  {order.stutus}
+                  <Tooltip
+                    hasArrow
+                    label={tooltipMSG(order.stutus)}
+                    bg="gray.300"
+                    color="black"
+                  >
+                    <Text as={"span"}>
+                      {order.stutus}
+                      <Icon as={BsInfoCircleFill} ml={2} />
+                    </Text>
+                  </Tooltip>
                 </Td>
 
                 <Td>
-                  <OrderActions
-                    order={order}
-                    setDeletedOrders={setDeletedOrders}
-                    setOrders={setOrders}
-                  />
+                  <OrderActions order={order} />
                 </Td>
               </Tr>
             ))}
@@ -349,69 +233,15 @@ export default function MyOrders() {
   );
 }
 
-const handelUpdateUser = async (
-  orderId,
-  action,
-  setLoading,
-  toast,
-  setDeletedOrders,
-  setIsOpen,
-  setOrders
-) => {
-  setLoading(true);
-  try {
-    const res = await fetch("/api/orders", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        orderId,
-        action,
-      }),
-    });
-    const answer = await res.json();
-    if (res.status === 200) {
-      toast({
-        description: "Done!",
-        status: "success",
-        duration: 9000,
-        isClosable: true,
-      });
-      if (action === "Delete") {
-        setDeletedOrders((prevState) => [...prevState, orderId]);
-      } else {
-        setOrders((prevState) => {
-          let orders = [...prevState];
-          const orderIdx = orders.map((ord) => ord._id).indexOf(orderId);
-
-          //let order = prevState.find((odr) => odr._id === orderId);
-          orders[orderIdx].stutus =
-            action === "Ban"
-              ? "Banned"
-              : action === "Approve"
-                ? "Delivered"
-                : "";
-
-          return orders;
-        });
-      }
-      setIsOpen(false);
-    } else {
-      toast({
-        description: answer.reason,
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-    }
-  } catch (err) {
-    toast({
-      description: "Something went wrong, Please refresh and try again!",
-      status: "error",
-      duration: 9000,
-      isClosable: true,
-    });
-    console.log(err);
-  } finally {
-    setLoading(false);
+const tooltipMSG = (status) => {
+  switch (status) {
+    case "Pending":
+      return "We're creating your IPTV account, You'll receive an email with your credentials within 6 hours max.";
+    case "Delivered":
+      return "Your IPTV account has been created. Please check your email (Don't forget Spam/Junk folder)";
+    case "Banned":
+      return "Your account has been terminated, If you believe this was a mistake please contact us";
+    default:
+      return "";
   }
 };

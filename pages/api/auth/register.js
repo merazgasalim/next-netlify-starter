@@ -1,10 +1,14 @@
 "use strict";
 import { createRouter } from "next-connect";
 import bcrypt from "bcrypt";
-const crypto = require("crypto");
+//const crypto = require("crypto");
+import crypto from "crypto"
+import { render } from "@react-email/render";
 import database from "middlewares/database";
-
+import { transporter } from "lib/nodemailer";
 import { ResetPasswordSchema, SetNewPasswordSchema } from "lib/validators";
+
+import { ResetPasswordEmail } from "components/emails/ResetPasswordEmail";
 
 const router = createRouter();
 
@@ -32,9 +36,8 @@ router
           .status(400)
           .json({ reason: "Customer with given email doesn't exist!" });
 
-      //create temporar pawword reset TOKEN
+      //create temporar password reset TOKEN
       const token = crypto.randomBytes(32).toString("hex");
-      console.log(token);
 
       //Save token to DB
       await req.db
@@ -46,8 +49,29 @@ router
 
       //Create reset link
       const link = `${process.env.baseURL}/auth/reset-password?email=${email}&token=${token}`;
-      console.log(link);
+
       //Send link via email
+      const result = await transporter.sendMail({
+        to: email,
+        from: "no-reply@tvstreams.net",
+        subject: "Reset your TV STREAMS Password",
+
+        html: render(
+          ResetPasswordEmail({
+            userFirstname: customer.name.split(" ")[0],
+            resetPasswordLink: link,
+          })
+        ),
+      });
+      const failed = result.rejected.concat(result.pending).filter(Boolean);
+      if (failed.length) {
+        console.log(`Email(s) (${failed.join(", ")}) could not be sent`);
+        return res
+          .status(400)
+          .json({
+            reason: `Email(s) (${failed.join(", ")}) could not be sent`,
+          });
+      }
 
       return res
         .status(200)
@@ -61,7 +85,7 @@ router
   .patch(async (req, res) => {
     try {
       const { password, rePassword, email, token } = req.body;
-      console.log(password, rePassword, email, token);
+
       //Validate form
       const formValidation = SetNewPasswordSchema.isValidSync({
         password,
@@ -79,7 +103,7 @@ router
         !customer ||
         !customer.token ||
         customer.token.data !== token ||
-        new Date().getTime() - customer.token.time > 1000 * 60 * 10 //10 minutes elapsed
+        new Date().getTime() - customer.token.time > 1000 * 60 * 15 //15 minutes elapsed
       )
         return res.status(400).json({ reason: "Invalid link or expired!" });
 
@@ -94,7 +118,6 @@ router
         }
       );
 
-      console.log(customer.token);
       return res.status(200).json({ reason: "Password reset sucessfully!" });
     } catch (err) {
       console.log(err);
@@ -125,7 +148,7 @@ router
       } catch (err) {
         console.log(err);
       }
-      console.log(account);
+
       if (account.upsertedId) {
         return res.status(200).json({ reason: "Registration successful!" });
       } else {
